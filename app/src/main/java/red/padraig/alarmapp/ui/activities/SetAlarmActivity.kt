@@ -1,6 +1,8 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_set_alarm.*
+import red.padraig.alarmapp.Alarm
 import red.padraig.alarmapp.R
 
 class SetAlarmActivity : BaseActivity() {
@@ -11,10 +13,21 @@ class SetAlarmActivity : BaseActivity() {
     }
 
     override fun initialiseListeners() {
-
+        button_setalarm_set.setOnClickListener {
+            setAlarm()
+            onBackPressed()
+        }
     }
 
     override fun clearListeners() {
+        button_setalarm_set.setOnClickListener(null)
+    }
 
+    private fun setAlarm() {
+        alarmDAO.insertAlarm(Alarm(
+                edittext_setalarm_time.text.toString().toInt(),
+                edittext_setalarm_days.text.toString().toInt(),
+                edittext_setalarm_active.text.toString() == "1"
+        ))
     }
 }
