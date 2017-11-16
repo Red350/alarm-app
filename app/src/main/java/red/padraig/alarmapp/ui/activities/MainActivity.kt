@@ -27,4 +27,8 @@ class MainActivity : BaseActivity() {
         button_main_viewalarms.setOnClickListener(null)
         button_main_setalarm.setOnClickListener(null)
     }
+
+    override fun initialiseSubscriptions() {
+
+    }
 }

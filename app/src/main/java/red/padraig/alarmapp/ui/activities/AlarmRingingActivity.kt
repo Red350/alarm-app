@@ -15,4 +15,7 @@ class AlarmRingingActivity : BaseActivity() {
 
     override fun clearListeners() {
     }
+
+    override fun initialiseSubscriptions() {
+    }
 }

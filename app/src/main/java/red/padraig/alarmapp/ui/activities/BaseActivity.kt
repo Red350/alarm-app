@@ -2,6 +2,7 @@ package red.padraig.alarmapp.ui.activities
 
 import android.app.Activity
 import android.os.Bundle
+import io.reactivex.disposables.CompositeDisposable
 import red.padraig.alarmapp.database.dao.AlarmDAO
 
 // Base activity that all other activities inherit from
@@ -10,6 +11,7 @@ abstract class BaseActivity : Activity() {
 
     protected val TAG = this::class.simpleName+"TAG"
 
+    protected val disposables = CompositeDisposable()
     protected lateinit var alarmDAO: AlarmDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,11 +22,13 @@ abstract class BaseActivity : Activity() {
     override fun onResume() {
         super.onResume()
         initialiseListeners()
+        initialiseSubscriptions()
     }
 
     override fun onPause() {
-        clearListeners()
         super.onPause()
+        clearListeners()
+        disposables.clear() // Clear all of the subscribed disposables
     }
 
     override fun onDestroy() {
@@ -37,4 +41,5 @@ abstract class BaseActivity : Activity() {
 
     protected abstract fun clearListeners()
 
+    protected abstract fun initialiseSubscriptions()
 }
