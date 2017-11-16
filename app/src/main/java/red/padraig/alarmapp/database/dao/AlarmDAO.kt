@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import io.reactivex.processors.PublishProcessor
 import red.padraig.alarmapp.Alarm
 import red.padraig.alarmapp.database.*
 
@@ -16,15 +17,57 @@ class AlarmDAO(context: Context) {
     private val databaseHelper = DatabaseHelper(context)
     private val db = databaseHelper.writableDatabase
 
+    // Stream of alarms that are updated
+    // UI elements can subscribe to this to ensure they are displaying the most up-to-date data
+    // TODO: find a way to attach a doOnNext to these so they log their emissions
+    val updatedAlarms: PublishProcessor<Alarm> = PublishProcessor.create()
+    val deletedAlarmIds: PublishProcessor<Long> = PublishProcessor.create()
+
     fun close() {
         databaseHelper.close()
     }
 
-    fun insertAlarm(alarm: Alarm): Long {
-        return db.insert(TABLE_ALARM, null, alarmToCv(alarm))
+    fun insertAlarm(time: Int, days: Int, active: Boolean): Long {
+        val cv = ContentValues()
+        cv.put(ALARM_COLUMN_TIME, time)
+        cv.put(ALARM_COLUMN_DAYS, days)
+        cv.put(ALARM_COLUMN_ACTIVE, active)
+        val id = db.insert(TABLE_ALARM, null, cv)
+
+        // Failed to insert an alarm
+        if (id == -1L) throw RuntimeException("Error inserting alarm")
+
+        Log.d(TAG, "Inserted alarm with id: $id")
+        // Emit the newly created alarm
+        updatedAlarms.onNext(Alarm(id, time, days, active))
+        deletedAlarmIds.onNext(1)
+        return id
     }
 
-    fun getAlarms(): List<Alarm> {
+    fun deleteAlarm(id: Long): Int {
+        val result = db.delete(TABLE_ALARM, "_id = " + id, null)
+
+        // Failed to delete an alarm
+        if (result != 1) throw RuntimeException("Error deleting alarm, deleted $result alarm(s) (id: $id)")
+
+        Log.d(TAG, "Deleted alarm with id: $id")
+        // Emit the id of the deleted alarm
+        deletedAlarmIds.onNext(id)
+        return result
+    }
+
+    fun getAlarmById(id: Long): Alarm {
+        val cursor = db.query(true, TABLE_ALARM, null,
+                "_id=$id", null, null, null, null, null)
+        cursor.moveToFirst()
+
+        val alarm = cursorToAlarm(cursor)
+
+        cursor.close()
+        return alarm
+    }
+
+    fun getAlarms(): MutableList<Alarm> {
         val alarmList = ArrayList<Alarm>()
         val cursor = db.query(true, TABLE_ALARM, null,
                 null, null, null, null, null, null)
@@ -33,38 +76,30 @@ class AlarmDAO(context: Context) {
             alarmList.add(cursorToAlarm(cursor))
         }
 
-
         cursor.close()
         return alarmList
     }
 
-    // TODO(pickup): Have to change the database so that the _id field matches rowID
-    // probably by removing _id altogether
-    fun updateAlarmState(id: Int, active: Boolean) {
-        val whereClause = "_id=" + id
+    // Updates whether the alarm is currently enabled or disabled
+    fun updateAlarmState(id: Long, active: Boolean): Int {
         val cv = ContentValues()
         cv.put(ALARM_COLUMN_ACTIVE, active)
-        db.update(TABLE_ALARM, cv, whereClause, null)
-    }
+        val result = db.update(TABLE_ALARM, cv, "_id=" + id, null)
 
+        if (result == -1) throw RuntimeException("Error updating alarm state, id: $id")
 
-    private fun alarmToCv(alarm: Alarm): ContentValues {
-        val cv = ContentValues()
-        if (alarm.id != -1) {
-            cv.put(ALARM_COLUMN_ID, alarm.id)
-        }
-        cv.put(ALARM_COLUMN_TIME, alarm.time)
-        cv.put(ALARM_COLUMN_DAYS, alarm.days)
-        cv.put(ALARM_COLUMN_ACTIVE, alarm.active)
-        return cv
+        Log.d(TAG, if (active) "Enabled" else "Disabled" + " alarm with id: $id")
+        // Emit the id of the updated alarm
+        updatedAlarms.onNext(getAlarmById(id))
+        return result
     }
 
     private fun cursorToAlarm(cursor: Cursor): Alarm {
-        val id = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_ID))
+        val id = cursor.getLong(cursor.getColumnIndex(ALARM_COLUMN_ID))
         val time = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_TIME))
         val days = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_DAYS))
         val active = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_ACTIVE))
-        return Alarm(time, days, (active == 1), id)
+        return Alarm(id, time, days, (active == 1))
     }
 
     inner class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
