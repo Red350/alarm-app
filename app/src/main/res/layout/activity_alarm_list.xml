@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/listview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="red.padraig.alarmapp.ui.activities.AlarmListActivity">
 
-</ListView>
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/text_alarmlist_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:text="No alarms set!" />
+
+</RelativeLayout>
+
+<!--<ListView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/listview"-->
+    <!--tools:context="red.padraig.alarmapp.ui.activities.AlarmListActivity">-->
+
+<!--</ListView>-->

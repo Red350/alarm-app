@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="@dimen/alarmrow_margin">
+    android:padding="@dimen/alarmrow_margin"
+    android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:id="@+id/layout_alarmrow_timedays"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="07:30"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -29,57 +30,57 @@
                 android:id="@+id/text_alarmrow_monday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/monday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/monday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_tuesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tuesday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/tuesday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_wednesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/wednesday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/wednesday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_thursday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/thursday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/thursday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_friday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/friday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/friday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_saturday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/saturday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/saturday_label" />
 
             <TextView
                 android:id="@+id/text_alarmrow_sunday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sunday_label"
+                android:layout_marginEnd="@dimen/daylabel_margin"
                 android:layout_marginStart="@dimen/daylabel_margin"
-                android:layout_marginEnd="@dimen/daylabel_margin"/>
+                android:text="@string/sunday_label" />
 
         </LinearLayout>
 
@@ -97,5 +98,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:text="Delete"/>
+        android:text="Delete" />
 </RelativeLayout>
