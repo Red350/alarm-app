@@ -8,6 +8,8 @@ import android.widget.BaseAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.alarmrow.view.*
 import red.padraig.alarmapp.Alarm
+import red.padraig.alarmapp.Extensions.fromBinaryToDaysArray
+import red.padraig.alarmapp.Extensions.toAlarmString
 import red.padraig.alarmapp.database.dao.AlarmDAO
 
 
@@ -34,12 +36,26 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
             row = layoutInflater.inflate(rowLayoutId, parent, false)
         }
 
-        // Set the data for the row
-        val alarm = getItem(position) as Alarm
-        row?.text_alarmrow_id?.text = alarm.id.toString()
-        row?.text_alarmrow_time?.text = alarm.time.toString()
-        row?.text_alarmrow_days?.text = alarm.days.toString()
+
+        /* Set the row data */
+
+        val alarm = getItem(position)
+        row?.text_alarmrow_time?.text = alarm.time.toAlarmString()
+
+        // Set which days the alarm is set for
+        val days = alarm.days.fromBinaryToDaysArray()
+        row?.text_alarmrow_monday?.isEnabled = days[0]
+        row?.text_alarmrow_tuesday?.isEnabled = days[1]
+        row?.text_alarmrow_wednesday?.isEnabled = days[2]
+        row?.text_alarmrow_thursday?.isEnabled = days[3]
+        row?.text_alarmrow_friday?.isEnabled = days[4]
+        row?.text_alarmrow_saturday?.isEnabled = days[5]
+        row?.text_alarmrow_sunday?.isEnabled = days[6]
+
+        // Set whether the alarm is currently enabled
         row?.switch_alarmrow_enabled?.isChecked = alarm.active
+
+        /* Set the listeners */
 
         // Set the listener for the enable/disable switch
         row?.switch_alarmrow_enabled?.setOnCheckedChangeListener { _, checked ->
@@ -50,7 +66,6 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
                     Toast.LENGTH_SHORT).show()
         }
 
-        // TODO
         // Set the listener for the delete button
         row?.button_alarmrow_delete?.setOnClickListener {
             alarmDAO.deleteAlarm(alarm.id)

@@ -1,3 +1,4 @@
 package red.padraig.alarmapp
 
-data class Alarm (var id: Long, val time: Int, val days: Int, val active: Boolean)
+// TODO: maybe store days as a boolean array here, and convert to/from int at database level
+data class Alarm (var id: Long, val time: Long, val days: Int, val active: Boolean)
