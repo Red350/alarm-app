@@ -3,4 +3,13 @@
     <string name="main_viewalarms">View Alarms</string>
     <string name="main_setalarm">Set New Alarm</string>
     <string name="main_nextalarmtitle">Next alarm will ring at:</string>
+    <string name="setalarm_timeseperator">:</string>
+    <string name="monday_label">M</string>
+    <string name="tuesday_label">T</string>
+    <string name="wednesday_label">W</string>
+    <string name="thursday_label">T</string>
+    <string name="friday_label">F</string>
+    <string name="saturday_label">S</string>
+    <string name="sunday_label">S</string>
+    <string name="setalarm_setbutton">Set Alarm</string>
 </resources>

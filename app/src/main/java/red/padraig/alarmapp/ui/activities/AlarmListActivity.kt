@@ -41,16 +41,12 @@ class AlarmListActivity : BaseActivity() {
         // todo: Launch SetAlarmActivity, with the alarm instance bundled
     }
 
-    private fun alarmUpdated(alarm: Alarm) {
-        updateUi()
-    }
+    private fun alarmUpdated(alarm: Alarm) = updateUi()
 
-    private fun alarmDeleted(alarmId: Long) {
-        updateUi()
-    }
+    private fun alarmDeleted(alarmId: Long) = updateUi()
 
-    private fun updateUi() {
-        // TODO: Now that alarms are in a list, can instead sort the list and change individual alarm instance, rather than pulling all the alarms again
-        alarmAdapter.updateView(alarmDAO.getAlarms())
-    }
+    // TODO: Now that alarms are in a list, can instead sort the list and change individual alarm instance, rather than pulling all the alarms again
+    // Updates the list adapter
+    private fun updateUi() = alarmAdapter.updateView(alarmDAO.getAlarms())
+
 }
