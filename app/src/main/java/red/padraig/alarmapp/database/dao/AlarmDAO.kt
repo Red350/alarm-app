@@ -27,7 +27,7 @@ class AlarmDAO(context: Context) {
         databaseHelper.close()
     }
 
-    fun insertAlarm(time: Int, days: Int, active: Boolean): Long {
+    fun insertAlarm(time: Long, days: Int, active: Boolean): Long {
         val cv = ContentValues()
         cv.put(ALARM_COLUMN_TIME, time)
         cv.put(ALARM_COLUMN_DAYS, days)
@@ -56,12 +56,12 @@ class AlarmDAO(context: Context) {
         return result
     }
 
-    fun getAlarmById(id: Long): Alarm {
+    fun getAlarmById(id: Long): Alarm? {
         val cursor = db.query(true, TABLE_ALARM, null,
                 "_id=$id", null, null, null, null, null)
-        cursor.moveToFirst()
-
-        val alarm = cursorToAlarm(cursor)
+        var alarm: Alarm? = null
+        if (cursor.moveToFirst())
+            alarm = cursorToAlarm(cursor)
 
         cursor.close()
         return alarm
@@ -90,13 +90,15 @@ class AlarmDAO(context: Context) {
 
         Log.d(TAG, if (active) "Enabled" else "Disabled" + " alarm with id: $id")
         // Emit the id of the updated alarm
-        updatedAlarms.onNext(getAlarmById(id))
+        // Must check if the alarm is null, as it's possible the alarm is deleted before the alarm is emitted
+        val alarm: Alarm? = getAlarmById(id)
+        if (alarm != null) updatedAlarms.onNext(alarm)
         return result
     }
 
     private fun cursorToAlarm(cursor: Cursor): Alarm {
         val id = cursor.getLong(cursor.getColumnIndex(ALARM_COLUMN_ID))
-        val time = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_TIME))
+        val time = cursor.getLong(cursor.getColumnIndex(ALARM_COLUMN_TIME))
         val days = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_DAYS))
         val active = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_ACTIVE))
         return Alarm(id, time, days, (active == 1))

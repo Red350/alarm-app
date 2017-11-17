@@ -57,7 +57,7 @@ class SetAlarmActivity : BaseActivity() {
         days[6] = check_setalarm_sunday.isChecked
 
         alarmDAO.insertAlarm(
-                picker_setalarm_hours.value.fromHoursToMills() + picker_setalarm_minutes.value.fromMinutesToMillis(),
+                picker_setalarm_hours.value.fromHoursToMills().toLong() + picker_setalarm_minutes.value.fromMinutesToMillis().toLong(),
                 days.fromDaysArraytoBinary(),
                 true
         )

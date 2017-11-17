@@ -3,9 +3,6 @@ package red.padraig.alarmapp.Extensions
 import org.junit.Assert
 import org.junit.Test
 
-/**
- * Created by Red on 17/11/2017.
- */
 class IntExtensionsTest {
     @Test
     fun testFromMinutesToMillis() {

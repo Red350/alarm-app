@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="button_label">20sp</dimen>
+    <dimen name="daylabel_margin">5dp</dimen>
+    <dimen name="alarmrow_margin">15dp</dimen>
 </resources>
