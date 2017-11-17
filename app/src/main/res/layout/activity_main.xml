@@ -28,11 +28,13 @@
         android:id="@+id/button_main_viewalarms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_viewalarms" />
+        android:text="@string/main_viewalarms"
+        android:textSize="@dimen/button_label"/>
 
     <Button
         android:id="@+id/button_main_setalarm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_setalarm" />
+        android:text="@string/main_setalarm"
+        android:textSize="@dimen/button_label"/>
 </LinearLayout>
