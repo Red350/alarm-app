@@ -2,9 +2,9 @@ package red.padraig.alarmapp.ui.activities
 
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_set_alarm.*
-import red.padraig.alarmapp.Extensions.fromHourToMills
+import red.padraig.alarmapp.Extensions.fromDaysArraytoBinary
+import red.padraig.alarmapp.Extensions.fromHoursToMills
 import red.padraig.alarmapp.Extensions.fromMinutesToMillis
-import red.padraig.alarmapp.Extensions.toBinary
 import red.padraig.alarmapp.R
 
 class SetAlarmActivity : BaseActivity() {
@@ -57,8 +57,8 @@ class SetAlarmActivity : BaseActivity() {
         days[6] = check_setalarm_sunday.isChecked
 
         alarmDAO.insertAlarm(
-                picker_setalarm_hours.value.fromHourToMills() + picker_setalarm_minutes.value.fromMinutesToMillis(),
-                days.toBinary(),
+                picker_setalarm_hours.value.fromHoursToMills() + picker_setalarm_minutes.value.fromMinutesToMillis(),
+                days.fromDaysArraytoBinary(),
                 true
         )
     }
