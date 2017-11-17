@@ -12,4 +12,5 @@
     <string name="saturday_label">S</string>
     <string name="sunday_label">S</string>
     <string name="setalarm_setbutton">Set Alarm</string>
+    <string name="setalarm_updatebutton">Update Alarm</string>
 </resources>

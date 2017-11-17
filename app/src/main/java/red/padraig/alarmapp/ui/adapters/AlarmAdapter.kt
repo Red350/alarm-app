@@ -36,7 +36,6 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
             row = layoutInflater.inflate(rowLayoutId, parent, false)
         }
 
-
         /* Set the row data */
 
         val alarm = getItem(position)

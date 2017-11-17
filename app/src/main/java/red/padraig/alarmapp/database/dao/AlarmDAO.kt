@@ -27,11 +27,9 @@ class AlarmDAO(context: Context) {
         databaseHelper.close()
     }
 
-    fun insertAlarm(time: Long, days: Int, active: Boolean): Long {
-        val cv = ContentValues()
-        cv.put(ALARM_COLUMN_TIME, time)
-        cv.put(ALARM_COLUMN_DAYS, days)
-        cv.put(ALARM_COLUMN_ACTIVE, active)
+    fun createAlarm(time: Long, days: Int, active: Boolean): Long {
+        val cv = loadContentValues(time, days, active)
+
         val id = db.insert(TABLE_ALARM, null, cv)
 
         // Failed to insert an alarm
@@ -40,8 +38,21 @@ class AlarmDAO(context: Context) {
         Log.d(TAG, "Inserted alarm with id: $id")
         // Emit the newly created alarm
         updatedAlarms.onNext(Alarm(id, time, days, active))
-        deletedAlarmIds.onNext(1)
         return id
+    }
+
+    fun updateAlarm(id: Long, time: Long, days: Int, active: Boolean): Int {
+        val cv = loadContentValues(time, days, active)
+
+        val result = db.update(TABLE_ALARM, cv, "_id=$id", null)
+
+        // Failed to update alarm
+        if (result != 1) throw RuntimeException("Error updating alarm, updated $result alarm(s) (id: $id)")
+
+        Log.d(TAG, "Updated alarm with id: $id")
+        // Emit the updated alarm
+        updatedAlarms.onNext(Alarm(id, time, days, active))
+        return result
     }
 
     fun deleteAlarm(id: Long): Int {
@@ -70,7 +81,7 @@ class AlarmDAO(context: Context) {
     fun getAlarms(): MutableList<Alarm> {
         val alarmList = ArrayList<Alarm>()
         val cursor = db.query(true, TABLE_ALARM, null,
-                null, null, null, null, null, null)
+                null, null, null, null, ALARM_COLUMN_TIME, null)
 
         while (cursor.moveToNext()) {
             alarmList.add(cursorToAlarm(cursor))
@@ -102,6 +113,14 @@ class AlarmDAO(context: Context) {
         val days = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_DAYS))
         val active = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_ACTIVE))
         return Alarm(id, time, days, (active == 1))
+    }
+
+    private fun loadContentValues(time: Long, days: Int, active: Boolean): ContentValues {
+        val cv = ContentValues()
+        cv.put(ALARM_COLUMN_TIME, time)
+        cv.put(ALARM_COLUMN_DAYS, days)
+        cv.put(ALARM_COLUMN_ACTIVE, active)
+        return cv
     }
 
     inner class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
