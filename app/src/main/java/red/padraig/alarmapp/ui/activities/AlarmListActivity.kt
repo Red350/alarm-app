@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_alarm_list.*
-import red.padraig.alarmapp.Alarm
 import red.padraig.alarmapp.R
+import red.padraig.alarmapp.alarm.Alarm
 import red.padraig.alarmapp.ui.adapters.AlarmAdapter
 
 class AlarmListActivity : BaseActivity() {
@@ -34,6 +34,7 @@ class AlarmListActivity : BaseActivity() {
     }
 
     override fun initialiseSubscriptions() {
+        super.initialiseSubscriptions()
         disposables.addAll(
                 alarmDAO.updatedAlarms.subscribe(this::alarmUpdated),
                 alarmDAO.deletedAlarmIds.subscribe(this::alarmDeleted)
@@ -56,6 +57,7 @@ class AlarmListActivity : BaseActivity() {
     private fun alarmUpdated(alarm: Alarm) = updateUi()
 
     // Animates the deleted row before updating the list view
+    // https://stackoverflow.com/a/6857762 (used animationListener instead of handler as suggested in the comments)
     private fun alarmDeleted(alarmId: Long) {
         val animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
         animation.duration = 500
@@ -70,7 +72,6 @@ class AlarmListActivity : BaseActivity() {
 
             override fun onAnimationStart(anim: Animation?) {
             }
-
         })
 
         // Find the row index of the view that's being deleted

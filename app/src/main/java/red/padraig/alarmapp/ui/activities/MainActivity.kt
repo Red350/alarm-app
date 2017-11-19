@@ -18,6 +18,11 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // TODO: Set the next alarm text field
+    }
+
     override fun initialiseListeners() {
         button_main_viewalarms.setOnClickListener { startActivity(Intent(this, AlarmListActivity::class.java))  }
         button_main_setalarm.setOnClickListener { startActivity(Intent(this, SetAlarmActivity::class.java)) }
@@ -28,7 +33,4 @@ class MainActivity : BaseActivity() {
         button_main_setalarm.setOnClickListener(null)
     }
 
-    override fun initialiseSubscriptions() {
-
-    }
 }
