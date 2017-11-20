@@ -21,6 +21,7 @@ class SetAlarmActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_alarm)
 
+        // TODO: Set initial time and day to now
         initialiseNumberPickers()
         val alarm: Alarm? = intent.getParcelableExtra<Alarm>("alarm")
 
