@@ -8,10 +8,16 @@ import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.alarmrow.view.*
 import red.padraig.alarmapp.Extensions.toAlarmString
 import red.padraig.alarmapp.alarm.Alarm
-import red.padraig.alarmapp.database.dao.AlarmDAO
+import red.padraig.alarmapp.callbacks.DeleteAlarmCallback
+import red.padraig.alarmapp.callbacks.UpdateAlarmStateCallback
 
 
-class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: Int, val alarms: MutableList<Alarm>) :
+class AlarmAdapter(
+        val ctx: Context,
+        val rowLayoutId: Int,
+        val alarms: MutableList<Alarm>,
+        val updateAlarmStateCallback: UpdateAlarmStateCallback,
+        val deleteAlarmCallback: DeleteAlarmCallback) :
         BaseAdapter() {
 
     override fun getItem(i: Int): Alarm {
@@ -54,13 +60,12 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
         /* Set the listeners */
 
         // Set the listener for the enable/disable switch
-        // TODO: Change this to a callback instead of passing the AlarmDAO instance
         row?.switch_alarmrow_enabled?.setOnCheckedChangeListener { _, checked ->
-            alarmDAO.updateAlarmState(alarm.id, checked)
+            updateAlarmStateCallback.updateAlarmState(alarm.id, checked)
         }
 
         // Set the listener for the delete button
-        row?.button_alarmrow_delete?.setOnClickListener { alarmDAO.deleteAlarm(alarm.id) }
+        row?.button_alarmrow_delete?.setOnClickListener { deleteAlarmCallback.deleteAlarm(alarm.id) }
 
         return row
     }

@@ -7,9 +7,11 @@ import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.activity_alarm_list.*
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.Alarm
+import red.padraig.alarmapp.callbacks.DeleteAlarmCallback
+import red.padraig.alarmapp.callbacks.UpdateAlarmStateCallback
 import red.padraig.alarmapp.ui.adapters.AlarmAdapter
 
-class AlarmListActivity : BaseActivity() {
+class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmCallback {
 
     private lateinit var alarmAdapter: AlarmAdapter
 
@@ -42,7 +44,7 @@ class AlarmListActivity : BaseActivity() {
     }
 
     private fun initialiseListView() {
-        alarmAdapter = AlarmAdapter(alarmDAO, this, R.layout.alarmrow, alarmDAO.getAlarms())
+        alarmAdapter = AlarmAdapter(applicationContext, R.layout.alarmrow, alarmDAO.getAlarms(), this, this)
         listview.adapter = alarmAdapter
         listview.emptyView = text_alarmlist_empty
     }
@@ -51,7 +53,6 @@ class AlarmListActivity : BaseActivity() {
         val intent = Intent(this, SetAlarmActivity::class.java)
         intent.putExtra("alarm", alarm)
         startActivity(intent)
-        // todo: Launch SetAlarmActivity, with the alarm instance bundled
     }
 
     private fun alarmUpdated(alarm: Alarm) = updateUi()
@@ -90,4 +91,13 @@ class AlarmListActivity : BaseActivity() {
     // Updates the list adapter
     private fun updateUi() = alarmAdapter.updateView(alarmDAO.getAlarms())
 
+    override fun updateAlarmState(id: Long, active: Boolean) {
+        alarmDAO.updateAlarmState(id, active)
+    }
+
+    override fun deleteAlarm(id: Long) {
+        alarmDAO.deleteAlarm(id)
+    }
+
 }
+

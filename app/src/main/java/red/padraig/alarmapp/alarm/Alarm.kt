@@ -14,7 +14,6 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
             parcel.createBooleanArray(),
             parcel.readByte() != 0.toByte())
 
-    // TODO: pass calendar instance to this method, to allow for testing
     fun getNextTriggerTime(): Long {
         val todaysIndex = getTodaysIndex()    // Find first day after or including today that the alarm is set
         val timeSinceMidnight = timeSinceMidnight()

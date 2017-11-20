@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import red.padraig.alarmapp.Extensions.fromEpochToDateString
+import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
 
 interface AlarmBroadcastSetter {
 
@@ -17,7 +18,7 @@ interface AlarmBroadcastSetter {
 
         override fun set(context: Context, time: Long) {
             getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, time, createPendingIntent(context))
-            Toast.makeText(context, "Alarm set for ${time.fromEpochToDateString()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Alarm set for ${time.fromEpochToDateTimeString()}", Toast.LENGTH_SHORT).show()
         }
 
         override fun cancel(context: Context) {
@@ -33,7 +34,6 @@ interface AlarmBroadcastSetter {
         private fun getAlarmManager(context: Context): AlarmManager {
             return context.getSystemService(AlarmManager::class.java)
         }
-
     }
 
     class TestBroadcastSetter : AlarmBroadcastSetter {

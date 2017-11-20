@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 class AlarmRingingActivity : BaseActivity() {
 
     lateinit var alarmAnnunciator: AlarmAnnunciator
+    var alarmSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +26,11 @@ class AlarmRingingActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        alarmAnnunciator.stop()
-        // Default behaviour is to snooze the alarm if the activity somehow pauses before the user makes a choice
-        // This also prevents a situation where no alarm is set at all
-        snoozeAlarm()
+        alarmAnnunciator.stop() // Alarm stops ringing if the user puts the app in the background
+
+        // If the user backgrounds the activity without snoozing or cancelling, a snooze is set by default
+        if (!alarmSet) snoozeAlarm()
+        finish()
     }
 
     override fun initialiseListeners() {
@@ -50,18 +52,21 @@ class AlarmRingingActivity : BaseActivity() {
     // Stop the current alarm ringing and register the next alarm
     private fun stopAlarm() {
         alarmAnnunciator.stop()
-        sharedPrefs.setSnoozeState(false)
+        sharedPrefs.setSnoozeState(false)   // Must set snooze state false before registering a new alarm
         setNextAlarm()
+        alarmSet = true
     }
 
-    // Register a snooze alarm for 10 minutes from this point
+    // Stop the current alarm ringing and register a snooze alarm for 10 minutes from this point
     private fun snoozeAlarm() {
-        snoozeFor(10)
+        alarmAnnunciator.stop()
+        snoozeFor(sharedPrefs.getSnoozeDuration())
         sharedPrefs.setSnoozeState(true)
+        alarmSet = true
     }
 
     private fun snoozeFor(minutes: Int) {
-        val snoozeTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10)
+        val snoozeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(minutes.toLong())
         alarmBroadcastSetter.set(applicationContext, snoozeTime)
         sharedPrefs.setSnoozeTime(snoozeTime)
     }

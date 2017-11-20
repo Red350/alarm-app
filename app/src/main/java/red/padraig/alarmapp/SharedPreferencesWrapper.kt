@@ -12,7 +12,12 @@ class SharedPreferencesWrapper(val context: Context) {
     val SNOOZE_STATE = "snoozeState"
     val SNOOZE_TIME = "snoozeTime"
     val NEXT_ALARM_TIME = "nextAlarmTime"
-    val INVALID_TIME = -1L
+    val SNOOZE_DURATION = "snoozeDuration"
+
+    companion object {
+        val INVALID_TIME = -1L
+        val DEFAULT_SNOOZE_DURATION = 10
+    }
 
     fun setSnoozeState(state: Boolean) {
         getSharedPreferences().edit().putBoolean(SNOOZE_STATE, state).apply()
@@ -38,11 +43,16 @@ class SharedPreferencesWrapper(val context: Context) {
         return getSharedPreferences().getLong(NEXT_ALARM_TIME, INVALID_TIME)
     }
 
+    fun setSnoozeDuration(time: Int) {
+        getSharedPreferences().edit().putInt(SNOOZE_DURATION, time).apply()
+    }
+
+    fun getSnoozeDuration(): Int {
+        return getSharedPreferences().getInt(SNOOZE_DURATION, DEFAULT_SNOOZE_DURATION)
+    }
+
     private fun getSharedPreferences(): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFS_TAG, Context.MODE_PRIVATE)
     }
 
-    private fun getEditor(): SharedPreferences.Editor {
-        return getSharedPreferences().edit()
-    }
 }

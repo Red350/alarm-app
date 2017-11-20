@@ -21,7 +21,6 @@ class AlarmDAO(context: Context) {
 
     // Stream of alarms that are updated
     // UI elements can subscribe to this to ensure they are displaying the most up-to-date data
-    // TODO: find a way to attach a doOnNext to these so they log their emissions
     val updatedAlarms: PublishProcessor<Alarm> = PublishProcessor.create()
     val deletedAlarmIds: PublishProcessor<Long> = PublishProcessor.create()
 
