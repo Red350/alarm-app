@@ -11,9 +11,11 @@ import red.padraig.alarmapp.Extensions.getMinutes
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.Alarm
 import red.padraig.alarmapp.util.getTodaysIndex
+import java.util.*
 
 class SetAlarmActivity : BaseActivity() {
 
+    // TODO: Add a button to change between picking individual days, or setting alarm for every day
     // Allows one button to both create and update an alarm, depending on the context
     private lateinit var dbOperation: () -> Unit
     private var alarm: Alarm? = null
@@ -82,6 +84,7 @@ class SetAlarmActivity : BaseActivity() {
     }
 
     private fun initialiseScreenToCurrentDayAndTime() {
+        // Tick today
         when (getTodaysIndex()) {
             0 -> check_setalarm_monday.isChecked = true
             1 -> check_setalarm_tuesday.isChecked = true
@@ -91,6 +94,10 @@ class SetAlarmActivity : BaseActivity() {
             5 -> check_setalarm_saturday.isChecked = true
             6 -> check_setalarm_sunday.isChecked = true
         }
+
+        val calendar = Calendar.getInstance()
+        picker_setalarm_hours.value = calendar.get(Calendar.HOUR_OF_DAY)
+        picker_setalarm_minutes.value = calendar.get(Calendar.MINUTE)
     }
 
     // Loads the bundled alarm instance into the view

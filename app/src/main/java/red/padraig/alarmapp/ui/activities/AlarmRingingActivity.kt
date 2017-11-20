@@ -1,6 +1,5 @@
 package red.padraig.alarmapp.ui.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
@@ -51,18 +50,19 @@ class AlarmRingingActivity : BaseActivity() {
     // Stop the current alarm ringing and register the next alarm
     private fun stopAlarm() {
         alarmAnnunciator.stop()
-        setSnoozeState(false)
+        sharedPrefs.setSnoozeState(false)
         setNextAlarm()
     }
 
     // Register a snooze alarm for 10 minutes from this point
     private fun snoozeAlarm() {
-        // TODO: also have to set some global state to stop other emitted alarms from overriding the snoozed alarm
         snoozeFor(10)
-        setSnoozeState(true)
+        sharedPrefs.setSnoozeState(true)
     }
 
     private fun snoozeFor(minutes: Int) {
-        alarmBroadcastSetter.set(applicationContext, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
+        val snoozeTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10)
+        alarmBroadcastSetter.set(applicationContext, snoozeTime)
+        sharedPrefs.setSnoozeTime(snoozeTime)
     }
 }

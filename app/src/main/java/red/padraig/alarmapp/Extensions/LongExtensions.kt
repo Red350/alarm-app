@@ -20,7 +20,17 @@ fun Long.toAlarmString(): String {
     return builder.toString()
 }
 
+fun Long.fromEpochToDateTimeString(): String {
+    val simpleDateFormat = SimpleDateFormat("HH:mm E dd/MM/yyyy")
+    return simpleDateFormat.format(Date(this))
+}
+
+fun Long.fromEpochToTimeString(): String {
+    val simpleDateFormat = SimpleDateFormat("HH:mm")
+    return simpleDateFormat.format(Date(this))
+}
+
 fun Long.fromEpochToDateString(): String {
-    val sdf = SimpleDateFormat("HH:mm E dd/MM/yyyy")
-    return sdf.format(Date(this))
+    val simpleDateFormat = SimpleDateFormat("E, dd/MM/yyyy")
+    return simpleDateFormat.format(Date(this))
 }
