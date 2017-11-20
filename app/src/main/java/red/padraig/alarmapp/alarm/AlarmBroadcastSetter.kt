@@ -22,7 +22,7 @@ interface AlarmBroadcastSetter {
 
         override fun cancel(context: Context) {
             getAlarmManager(context).cancel(createPendingIntent(context))
-            Toast.makeText(context, "Alarm cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "No alarms set", Toast.LENGTH_SHORT).show()
         }
 
         private fun createPendingIntent(context: Context): PendingIntent {

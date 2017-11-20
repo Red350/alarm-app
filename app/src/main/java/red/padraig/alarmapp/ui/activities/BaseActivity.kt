@@ -1,8 +1,11 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import io.reactivex.disposables.CompositeDisposable
+import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmBroadcastSetter
 import red.padraig.alarmapp.database.dao.AlarmDAO
 
@@ -51,13 +54,15 @@ abstract class BaseActivity : Activity() {
     }
 
     protected fun setNextAlarm() {
+        // Don't set any alarms if there's currently a snooze alarm set
+        if (getSnoozeState()) return
+
         val nextAlarmTime = getNextAlarmTime()
         if (nextAlarmTime == -1L) {
             cancelAlarm()
         } else {
             alarmBroadcastSetter.set(this, getNextAlarmTime())
         }
-
     }
 
     // If there are no alarms to be set, this cancels the alarm broadcast
@@ -73,6 +78,23 @@ abstract class BaseActivity : Activity() {
                 .map { it.getNextTriggerTime() }
                 .min()
                 ?: -1L
+    }
+
+    protected fun cancelSnooze() {
+        setSnoozeState(false)
+        setNextAlarm()
+    }
+
+    protected fun setSnoozeState(state: Boolean) {
+        getSharedPrefs().edit().putBoolean(getString(R.string.snooze_state), state).apply()
+    }
+
+    protected fun getSnoozeState(): Boolean {
+        return getSharedPrefs().getBoolean(getString(R.string.snooze_state), false)
+    }
+
+    private fun getSharedPrefs(): SharedPreferences {
+        return getSharedPreferences(getString(R.string.sharedprefs_tag), Context.MODE_PRIVATE)
     }
 
     protected abstract fun initialiseListeners()

@@ -1,11 +1,13 @@
 package red.padraig.alarmapp.ui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
 import java.util.concurrent.TimeUnit
+
 
 class AlarmRingingActivity : BaseActivity() {
 
@@ -49,6 +51,7 @@ class AlarmRingingActivity : BaseActivity() {
     // Stop the current alarm ringing and register the next alarm
     private fun stopAlarm() {
         alarmAnnunciator.stop()
+        setSnoozeState(false)
         setNextAlarm()
     }
 
@@ -56,6 +59,7 @@ class AlarmRingingActivity : BaseActivity() {
     private fun snoozeAlarm() {
         // TODO: also have to set some global state to stop other emitted alarms from overriding the snoozed alarm
         snoozeFor(10)
+        setSnoozeState(true)
     }
 
     private fun snoozeFor(minutes: Int) {
