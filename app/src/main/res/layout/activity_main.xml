@@ -37,4 +37,13 @@
         android:layout_height="wrap_content"
         android:text="@string/main_setalarm"
         android:textSize="@dimen/button_label"/>
+
+    <!--TODO: prevent this button from moving everything up when it's visible, probably use relative layout-->
+    <Button
+        android:id="@+id/button_main_cancelsnooze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_cancelsnooze"
+        android:textSize="@dimen/button_label"
+        android:visibility="invisible"/>
 </LinearLayout>

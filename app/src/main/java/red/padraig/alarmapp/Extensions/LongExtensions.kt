@@ -1,5 +1,8 @@
 package red.padraig.alarmapp.Extensions
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 val SECOND_MILLIS = 1000
 val MINUTE_MILLIS = SECOND_MILLIS * 60
 val HOUR_MILLIS =  MINUTE_MILLIS * 60
@@ -15,4 +18,9 @@ fun Long.toAlarmString(): String {
     builder.append(":")
     builder.append(String.format("%02d", this.getMinutes()))
     return builder.toString()
+}
+
+fun Long.fromEpochToDateString(): String {
+    val sdf = SimpleDateFormat("HH:mm E dd/MM/yyyy")
+    return sdf.format(Date(this))
 }

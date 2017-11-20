@@ -13,4 +13,7 @@
     <string name="sunday_label">S</string>
     <string name="setalarm_setbutton">Set Alarm</string>
     <string name="setalarm_updatebutton">Update Alarm</string>
+    <string name="sharedprefs_tag">alarmPrefs</string>
+    <string name="snooze_state">snooze</string>
+    <string name="main_cancelsnooze">Cancel Snooze</string>
 </resources>

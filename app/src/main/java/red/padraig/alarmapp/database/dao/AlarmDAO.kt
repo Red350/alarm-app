@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import io.reactivex.processors.PublishProcessor
-import red.padraig.alarmapp.Alarm
+import red.padraig.alarmapp.Extensions.fromBinaryToDaysArray
+import red.padraig.alarmapp.Extensions.fromDaysArraytoBinary
+import red.padraig.alarmapp.alarm.Alarm
 import red.padraig.alarmapp.database.*
 
 class AlarmDAO(context: Context) {
@@ -27,8 +29,8 @@ class AlarmDAO(context: Context) {
         databaseHelper.close()
     }
 
-    fun createAlarm(time: Long, days: Int, active: Boolean): Long {
-        val cv = loadContentValues(time, days, active)
+    fun createAlarm(time: Long, days: BooleanArray, active: Boolean): Long {
+        val cv = loadContentValues(time, days.fromDaysArraytoBinary(), active)
 
         val id = db.insert(TABLE_ALARM, null, cv)
 
@@ -41,8 +43,8 @@ class AlarmDAO(context: Context) {
         return id
     }
 
-    fun updateAlarm(id: Long, time: Long, days: Int, active: Boolean): Int {
-        val cv = loadContentValues(time, days, active)
+    fun updateAlarm(id: Long, time: Long, days: BooleanArray, active: Boolean): Int {
+        val cv = loadContentValues(time, days.fromDaysArraytoBinary(), active)
 
         val result = db.update(TABLE_ALARM, cv, "_id=$id", null)
 
@@ -112,7 +114,7 @@ class AlarmDAO(context: Context) {
         val time = cursor.getLong(cursor.getColumnIndex(ALARM_COLUMN_TIME))
         val days = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_DAYS))
         val active = cursor.getInt(cursor.getColumnIndex(ALARM_COLUMN_ACTIVE))
-        return Alarm(id, time, days, (active == 1))
+        return Alarm(id, time, days.fromBinaryToDaysArray(), (active == 1))
     }
 
     private fun loadContentValues(time: Long, days: Int, active: Boolean): ContentValues {

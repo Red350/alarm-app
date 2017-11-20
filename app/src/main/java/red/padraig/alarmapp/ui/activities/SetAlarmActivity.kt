@@ -1,11 +1,15 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_set_alarm.*
-import red.padraig.alarmapp.Alarm
-import red.padraig.alarmapp.Extensions.*
+import red.padraig.alarmapp.Extensions.fromHoursToMills
+import red.padraig.alarmapp.Extensions.fromMinutesToMillis
+import red.padraig.alarmapp.Extensions.getHours
+import red.padraig.alarmapp.Extensions.getMinutes
 import red.padraig.alarmapp.R
+import red.padraig.alarmapp.alarm.Alarm
 
 class SetAlarmActivity : BaseActivity() {
 
@@ -17,6 +21,7 @@ class SetAlarmActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_alarm)
 
+        // TODO: Set initial time and day to now
         initialiseNumberPickers()
         val alarm: Alarm? = intent.getParcelableExtra<Alarm>("alarm")
 
@@ -29,10 +34,26 @@ class SetAlarmActivity : BaseActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.d("blahtest", "pause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("blahtest", "stop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("blahtest", "destroy")
+    }
+
     override fun initialiseListeners() {
         button_setalarm_set.setOnClickListener {
             if (atLeastOneDayChecked()) {
                 dbOperation()
+                // TODO: instead of automatically going back, delegate this to a callback method that triggers after the alarm is registered
                 onBackPressed()
             } else {
                 promptCheckDays()
@@ -42,10 +63,6 @@ class SetAlarmActivity : BaseActivity() {
 
     override fun clearListeners() {
         button_setalarm_set.setOnClickListener(null)
-    }
-
-    override fun initialiseSubscriptions() {
-
     }
 
     private fun initialiseNumberPickers() {
@@ -68,14 +85,13 @@ class SetAlarmActivity : BaseActivity() {
         picker_setalarm_hours.value = alarm.time.getHours().toInt()
         picker_setalarm_minutes.value = alarm.time.getMinutes().toInt()
 
-        val days = alarm.days.fromBinaryToDaysArray()
-        check_setalarm_monday.isChecked = days[0]
-        check_setalarm_tuesday.isChecked = days[1]
-        check_setalarm_wednesday.isChecked = days[2]
-        check_setalarm_thursday.isChecked = days[3]
-        check_setalarm_friday.isChecked = days[4]
-        check_setalarm_saturday.isChecked = days[5]
-        check_setalarm_sunday.isChecked = days[6]
+        check_setalarm_monday.isChecked = alarm.days[0]
+        check_setalarm_tuesday.isChecked = alarm.days[1]
+        check_setalarm_wednesday.isChecked = alarm.days[2]
+        check_setalarm_thursday.isChecked = alarm.days[3]
+        check_setalarm_friday.isChecked = alarm.days[4]
+        check_setalarm_saturday.isChecked = alarm.days[5]
+        check_setalarm_sunday.isChecked = alarm.days[6]
 
         button_setalarm_set.text = getString(R.string.setalarm_updatebutton)
     }
@@ -92,11 +108,13 @@ class SetAlarmActivity : BaseActivity() {
         }
     }
 
-    private fun atLeastOneDayChecked() = getDays() != 0
+    private fun atLeastOneDayChecked(): Boolean {
+        return getDays().any { it }
+    }
 
     private fun promptCheckDays() = Toast.makeText(this, "Select at least one day", Toast.LENGTH_SHORT).show()
 
-    private fun getDays(): Int {
+    private fun getDays(): BooleanArray {
         val days = BooleanArray(7)
         days[0] = check_setalarm_monday.isChecked
         days[1] = check_setalarm_tuesday.isChecked
@@ -106,7 +124,7 @@ class SetAlarmActivity : BaseActivity() {
         days[5] = check_setalarm_saturday.isChecked
         days[6] = check_setalarm_sunday.isChecked
 
-        return days.fromDaysArraytoBinary()
+        return days
     }
 
     private fun getTime() = picker_setalarm_hours.value.fromHoursToMills().toLong() + picker_setalarm_minutes.value.fromMinutesToMillis().toLong()
