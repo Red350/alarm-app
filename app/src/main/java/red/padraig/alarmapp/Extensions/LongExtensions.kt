@@ -21,7 +21,7 @@ fun Long.toAlarmString(): String {
 }
 
 fun Long.fromEpochToDateTimeString(): String {
-    val simpleDateFormat = SimpleDateFormat("HH:mm E dd/MM/yyyy")
+    val simpleDateFormat = SimpleDateFormat("HH:mm E, dd/MM/yyyy")
     return simpleDateFormat.format(Date(this))
 }
 

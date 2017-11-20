@@ -2,6 +2,7 @@ package red.padraig.alarmapp.ui.activities
 
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
@@ -63,6 +64,11 @@ class AlarmRingingActivity : BaseActivity() {
         snoozeFor(sharedPrefs.getSnoozeDuration())
         sharedPrefs.setSnoozeState(true)
         alarmSet = true
+        Toast.makeText(
+                this,
+                "Alarm snoozed for ${sharedPrefs.getSnoozeDuration()} minute(s)",
+                Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun snoozeFor(minutes: Int) {
