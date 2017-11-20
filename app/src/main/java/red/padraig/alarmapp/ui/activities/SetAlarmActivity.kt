@@ -10,6 +10,7 @@ import red.padraig.alarmapp.Extensions.getHours
 import red.padraig.alarmapp.Extensions.getMinutes
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.Alarm
+import red.padraig.alarmapp.util.getTodaysIndex
 
 class SetAlarmActivity : BaseActivity() {
 
@@ -21,15 +22,15 @@ class SetAlarmActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_alarm)
 
-        // TODO: Set initial time and day to now
         initialiseNumberPickers()
         val alarm: Alarm? = intent.getParcelableExtra<Alarm>("alarm")
 
         if (alarm != null) {
             this.alarm = alarm
-            setScreenToUpdatingAlarm(alarm) // Load the bundled alarm into the view
+            initialiseScreenToUpdatingAlarm(alarm) // Load the bundled alarm into the view
             dbOperation = this::updateAlarm
         } else {
+            initialiseScreenToCurrentDayAndTime()
             dbOperation = this::setAlarm
         }
     }
@@ -80,8 +81,20 @@ class SetAlarmActivity : BaseActivity() {
         }
     }
 
+    private fun initialiseScreenToCurrentDayAndTime() {
+        when (getTodaysIndex()) {
+            0 -> check_setalarm_monday.isChecked = true
+            1 -> check_setalarm_tuesday.isChecked = true
+            2 -> check_setalarm_wednesday.isChecked = true
+            3 -> check_setalarm_thursday.isChecked = true
+            4 -> check_setalarm_friday.isChecked = true
+            5 -> check_setalarm_saturday.isChecked = true
+            6 -> check_setalarm_sunday.isChecked = true
+        }
+    }
+
     // Loads the bundled alarm instance into the view
-    private fun setScreenToUpdatingAlarm(alarm: Alarm) {
+    private fun initialiseScreenToUpdatingAlarm(alarm: Alarm) {
         picker_setalarm_hours.value = alarm.time.getHours().toInt()
         picker_setalarm_minutes.value = alarm.time.getMinutes().toInt()
 

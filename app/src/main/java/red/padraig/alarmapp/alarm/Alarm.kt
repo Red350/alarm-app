@@ -2,6 +2,7 @@ package red.padraig.alarmapp.alarm
 
 import android.os.Parcel
 import android.os.Parcelable
+import red.padraig.alarmapp.util.getTodaysIndex
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -15,12 +16,12 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
 
     // TODO: pass calendar instance to this method, to allow for testing
     fun getNextTriggerTime(): Long {
-        val dayIndex = getDayIndex()    // Find first day after or including today that the alarm is set
+        val todaysIndex = getTodaysIndex()    // Find first day after or including today that the alarm is set
         val timeSinceMidnight = timeSinceMidnight()
 
         // If alarm is set for today, still have to ensure the time hasn't already passed
         // The time is offset by 1 second to prevent any possibility of the triggered alarm being re-registered
-        if (days[dayIndex] and (time - TimeUnit.SECONDS.toMillis(1) > timeSinceMidnight)) {
+        if (days[todaysIndex] and (time - TimeUnit.SECONDS.toMillis(1) > timeSinceMidnight)) {
             return alarmTimestampWithOffset(0)
         }
 
@@ -28,24 +29,8 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
         // This ensures that if the next alarm is for the same day as today, but the time is
         // already passed, it will still be set for that day next week.
         (1..7)
-                .first { days[(it + dayIndex) % 7] }
+                .first { days[(it + todaysIndex) % 7] }
                 .let { return alarmTimestampWithOffset(it) }
-    }
-
-    private fun getDayIndex(): Int {
-        val calendar = Calendar.getInstance()
-        val day = calendar.get(Calendar.DAY_OF_WEEK)
-
-        when (day) {
-            Calendar.MONDAY -> return 0
-            Calendar.TUESDAY -> return 1
-            Calendar.WEDNESDAY -> return 2
-            Calendar.THURSDAY -> return 3
-            Calendar.FRIDAY -> return 4
-            Calendar.SATURDAY -> return 5
-            Calendar.SUNDAY -> return 6
-            else -> throw RuntimeException("Day not returned")
-        }
     }
 
     // https://stackoverflow.com/a/34431277
