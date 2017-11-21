@@ -38,8 +38,8 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
     override fun initialiseSubscriptions() {
         super.initialiseSubscriptions()
         disposables.addAll(
-                alarmDAO.updatedAlarms.subscribe(this::alarmUpdated),
-                alarmDAO.deletedAlarmIds.subscribe(this::alarmDeleted)
+                alarmDAO.updatedAlarms.subscribe(this::onAlarmUpdated),
+                alarmDAO.deletedAlarmIds.subscribe(this::onAlarmDeleted)
         )
     }
 
@@ -55,19 +55,22 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
         startActivity(intent)
     }
 
-    private fun alarmUpdated(alarm: Alarm) = updateUi()
+    private fun onAlarmUpdated(alarm: Alarm) = alarmAdapter.updateRow(alarm)
 
     // Animates the deleted row before updating the list view
     // https://stackoverflow.com/a/6857762 (used animationListener instead of handler as suggested in the comments)
-    private fun alarmDeleted(alarmId: Long) {
+    private fun onAlarmDeleted(alarmId: Long) {
+        var childIndex = -1
+
         val animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
         animation.duration = 250
+
         animation.setAnimationListener( object: Animation.AnimationListener {
             override fun onAnimationRepeat(anim: Animation?) {
             }
 
             override fun onAnimationEnd(anim: Animation?) {
-                alarmAdapter.deleteRow(alarmId)
+                alarmAdapter.deleteRow(childIndex)
                 listview.isEnabled = true   // Re-enable list view
             }
 
@@ -76,7 +79,6 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
         })
 
         // Find the row index of the view that's being deleted
-        var childIndex = -1
         for ((id) in alarmAdapter.alarms) {
             childIndex++
             if (id == alarmId) {
@@ -86,10 +88,6 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
         listview.isEnabled = false    // Disable list view during animation
         listview.getChildAt(childIndex).startAnimation(animation)
     }
-
-    // TODO: Now that alarms are in a list, can instead sort the list and change individual alarm instance, rather than pulling all the alarms again
-    // Updates the list adapter
-    private fun updateUi() = alarmAdapter.updateView(alarmDAO.getAlarms())
 
     override fun updateAlarmState(id: Long, active: Boolean) {
         alarmDAO.updateAlarmState(id, active)

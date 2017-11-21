@@ -78,10 +78,16 @@ class AlarmAdapter(
         notifyDataSetChanged()
     }
 
-    fun deleteRow(alarmId: Long) {
-        alarms
-                .first { it.id == alarmId }
-                .let { alarms.remove(it) }
+    fun updateRow(alarm: Alarm) {
+        (0 until alarms.size)
+                .first { alarms[it].id == alarm.id }
+                .let {
+                    alarms[it] = alarm
+                }
+    }
+
+    fun deleteRow(index: Int) {
+        alarms.removeAt(index)
         notifyDataSetChanged()
     }
 }
