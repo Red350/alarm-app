@@ -16,8 +16,8 @@ class AlarmAdapter(
         val ctx: Context,
         val rowLayoutId: Int,
         val alarms: MutableList<Alarm>,
-        val updateAlarmStateCallback: UpdateAlarmStateCallback,
-        val deleteAlarmCallback: DeleteAlarmCallback) :
+        private val updateAlarmStateCallback: UpdateAlarmStateCallback,
+        private val deleteAlarmCallback: DeleteAlarmCallback) :
         BaseAdapter() {
 
     override fun getItem(i: Int): Alarm {
@@ -40,7 +40,8 @@ class AlarmAdapter(
             row = layoutInflater.inflate(rowLayoutId, parent, false)
         }
 
-        /* Set the row data */
+
+        /* Set row data */
 
         val alarm = getItem(position)
         row?.text_alarmrow_time?.text = alarm.time.toAlarmString()
@@ -57,7 +58,8 @@ class AlarmAdapter(
         // Set whether the alarm is currently enabled
         row?.switch_alarmrow_enabled?.isChecked = alarm.active
 
-        /* Set the listeners */
+
+        /* Set listeners */
 
         // Set the listener for the enable/disable switch
         row?.switch_alarmrow_enabled?.setOnCheckedChangeListener { _, checked ->
@@ -73,6 +75,13 @@ class AlarmAdapter(
     fun updateView(newAlarms: List<Alarm>) {
         alarms.clear()
         alarms.addAll(newAlarms)
+        notifyDataSetChanged()
+    }
+
+    fun deleteRow(alarmId: Long) {
+        alarms
+                .first { it.id == alarmId }
+                .let { alarms.remove(it) }
         notifyDataSetChanged()
     }
 }

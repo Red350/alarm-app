@@ -39,12 +39,6 @@ abstract class BaseActivity : Activity() {
         disposables.clear() // Clear all of the subscribed disposables
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // TODO: this may cause problems with one activity closing the connection after another has opened it
-        alarmDAO.close()
-    }
-
     open protected fun initialiseSubscriptions() {
         // TODO: at the moment, every time an alarm is changed or deleted, a new alarm is registered with the OS
         // The deleted/changed alarm may not actually change the next alarm.

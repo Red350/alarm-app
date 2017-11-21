@@ -61,14 +61,14 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
     // https://stackoverflow.com/a/6857762 (used animationListener instead of handler as suggested in the comments)
     private fun alarmDeleted(alarmId: Long) {
         val animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
-        animation.duration = 500
+        animation.duration = 250
         animation.setAnimationListener( object: Animation.AnimationListener {
             override fun onAnimationRepeat(anim: Animation?) {
             }
 
             override fun onAnimationEnd(anim: Animation?) {
-                updateUi()
-                initialiseListeners()   // Re-enable list view onClick
+                alarmAdapter.deleteRow(alarmId)
+                listview.isEnabled = true   // Re-enable list view
             }
 
             override fun onAnimationStart(anim: Animation?) {
@@ -83,7 +83,7 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
                 break
             }
         }
-        clearListeners()    // Disable list view onClick during animation
+        listview.isEnabled = false    // Disable list view during animation
         listview.getChildAt(childIndex).startAnimation(animation)
     }
 
