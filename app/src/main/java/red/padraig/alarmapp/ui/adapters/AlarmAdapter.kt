@@ -67,7 +67,7 @@ class AlarmAdapter(
         }
 
         // Set the listener for the delete button
-        row?.button_alarmrow_delete?.setOnClickListener { deleteAlarmCallback.deleteAlarm(alarm.id) }
+        row?.imagebutton_alarmrow_delete?.setOnClickListener { deleteAlarmCallback.deleteAlarm(alarm.id) }
 
         return row
     }

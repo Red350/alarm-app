@@ -16,4 +16,5 @@
     <string name="snooze_state">snoozeState</string>
     <string name="main_cancelsnooze">Cancel Snooze</string>
     <string name="snooze_time">snoozeTime</string>
+    <string name="delete_alarm_desc">Delete alarm</string>
 </resources>
