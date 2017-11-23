@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!--TODO: create a custom textview object to avoid copy pasting all of these-->
             <TextView
                 android:id="@+id/text_alarmrow_monday"
                 android:layout_width="wrap_content"

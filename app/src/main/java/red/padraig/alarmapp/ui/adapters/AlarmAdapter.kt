@@ -8,10 +8,16 @@ import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.alarmrow.view.*
 import red.padraig.alarmapp.Extensions.toAlarmString
 import red.padraig.alarmapp.alarm.Alarm
-import red.padraig.alarmapp.database.dao.AlarmDAO
+import red.padraig.alarmapp.callbacks.DeleteAlarmCallback
+import red.padraig.alarmapp.callbacks.UpdateAlarmStateCallback
 
 
-class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: Int, val alarms: MutableList<Alarm>) :
+class AlarmAdapter(
+        val ctx: Context,
+        val rowLayoutId: Int,
+        val alarms: MutableList<Alarm>,
+        private val updateAlarmStateCallback: UpdateAlarmStateCallback,
+        private val deleteAlarmCallback: DeleteAlarmCallback) :
         BaseAdapter() {
 
     override fun getItem(i: Int): Alarm {
@@ -34,7 +40,8 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
             row = layoutInflater.inflate(rowLayoutId, parent, false)
         }
 
-        /* Set the row data */
+
+        /* Set row data */
 
         val alarm = getItem(position)
         row?.text_alarmrow_time?.text = alarm.time.toAlarmString()
@@ -51,16 +58,16 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
         // Set whether the alarm is currently enabled
         row?.switch_alarmrow_enabled?.isChecked = alarm.active
 
-        /* Set the listeners */
+
+        /* Set listeners */
 
         // Set the listener for the enable/disable switch
-        // TODO: Change this to a callback instead of passing the AlarmDAO instance
         row?.switch_alarmrow_enabled?.setOnCheckedChangeListener { _, checked ->
-            alarmDAO.updateAlarmState(alarm.id, checked)
+            updateAlarmStateCallback.updateAlarmState(alarm.id, checked)
         }
 
         // Set the listener for the delete button
-        row?.button_alarmrow_delete?.setOnClickListener { alarmDAO.deleteAlarm(alarm.id) }
+        row?.button_alarmrow_delete?.setOnClickListener { deleteAlarmCallback.deleteAlarm(alarm.id) }
 
         return row
     }
@@ -68,6 +75,19 @@ class AlarmAdapter(val alarmDAO: AlarmDAO, val ctx: Context, val rowLayoutId: In
     fun updateView(newAlarms: List<Alarm>) {
         alarms.clear()
         alarms.addAll(newAlarms)
+        notifyDataSetChanged()
+    }
+
+    fun updateRow(alarm: Alarm) {
+        (0 until alarms.size)
+                .first { alarms[it].id == alarm.id }
+                .let {
+                    alarms[it] = alarm
+                }
+    }
+
+    fun deleteRow(index: Int) {
+        alarms.removeAt(index)
         notifyDataSetChanged()
     }
 }

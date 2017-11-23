@@ -1,11 +1,11 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
 import io.reactivex.disposables.CompositeDisposable
-import red.padraig.alarmapp.R
+import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
+import red.padraig.alarmapp.SharedPreferencesWrapper
 import red.padraig.alarmapp.alarm.AlarmBroadcastSetter
 import red.padraig.alarmapp.database.dao.AlarmDAO
 
@@ -18,11 +18,13 @@ abstract class BaseActivity : Activity() {
     protected val disposables = CompositeDisposable()
     protected lateinit var alarmDAO: AlarmDAO
     protected lateinit var alarmBroadcastSetter: AlarmBroadcastSetter
+    protected lateinit var sharedPrefs: SharedPreferencesWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         alarmDAO = AlarmDAO(applicationContext)
         alarmBroadcastSetter = AlarmBroadcastSetter.Impl()
+        sharedPrefs = SharedPreferencesWrapper(applicationContext)
     }
 
     override fun onResume() {
@@ -37,12 +39,6 @@ abstract class BaseActivity : Activity() {
         disposables.clear() // Clear all of the subscribed disposables
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // TODO: this may cause problems with one activity closing the connection after another has opened it
-        // alarmDAO.close()
-    }
-
     open protected fun initialiseSubscriptions() {
         // TODO: at the moment, every time an alarm is changed or deleted, a new alarm is registered with the OS
         // The deleted/changed alarm may not actually change the next alarm.
@@ -55,13 +51,18 @@ abstract class BaseActivity : Activity() {
 
     protected fun setNextAlarm() {
         // Don't set any alarms if there's currently a snooze alarm set
-        if (getSnoozeState()) return
+        if (sharedPrefs.getSnoozeState()) return
 
         val nextAlarmTime = getNextAlarmTime()
         if (nextAlarmTime == -1L) {
             cancelAlarm()
         } else {
-            alarmBroadcastSetter.set(this, getNextAlarmTime())
+            alarmBroadcastSetter.set(this, nextAlarmTime)
+            Toast.makeText(
+                    this,
+                    "Next alarm will ring at:\n ${nextAlarmTime.fromEpochToDateTimeString()}",
+                    Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -74,27 +75,16 @@ abstract class BaseActivity : Activity() {
         val alarms = alarmDAO.getAlarms()
 
         return alarms
-                .filter { it.active }
-                .map { it.getNextTriggerTime() }
-                .min()
+                .filter { it.active }   // Only consider active alarms
+                .map { it.getNextTriggerTime() }    // Map to the trigger time of each alarm
+                .min()  // Get the minimum of the times
+                .apply { sharedPrefs.setNextAlarmTime(this ?: -1L) }    // Store in sharedPrefs before returning
                 ?: -1L
     }
 
     protected fun cancelSnooze() {
-        setSnoozeState(false)
+        sharedPrefs.setSnoozeState(false)
         setNextAlarm()
-    }
-
-    protected fun setSnoozeState(state: Boolean) {
-        getSharedPrefs().edit().putBoolean(getString(R.string.snooze_state), state).apply()
-    }
-
-    protected fun getSnoozeState(): Boolean {
-        return getSharedPrefs().getBoolean(getString(R.string.snooze_state), false)
-    }
-
-    private fun getSharedPrefs(): SharedPreferences {
-        return getSharedPreferences(getString(R.string.sharedprefs_tag), Context.MODE_PRIVATE)
     }
 
     protected abstract fun initialiseListeners()
