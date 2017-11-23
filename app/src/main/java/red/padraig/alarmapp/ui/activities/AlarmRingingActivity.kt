@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
+import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
 import java.util.concurrent.TimeUnit
@@ -74,6 +75,7 @@ class AlarmRingingActivity : BaseActivity() {
     private fun snoozeFor(minutes: Int) {
         val snoozeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(minutes.toLong())
         alarmBroadcastSetter.set(applicationContext, snoozeTime)
+        updateNotification( "Alarm snoozed until: ", snoozeTime.fromEpochToDateTimeString())
         sharedPrefs.setSnoozeTime(snoozeTime)
     }
 }
