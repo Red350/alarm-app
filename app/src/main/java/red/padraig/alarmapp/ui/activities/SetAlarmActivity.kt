@@ -56,7 +56,6 @@ class SetAlarmActivity : BaseActivity() {
         button_setalarm_set.setOnClickListener {
             if (atLeastOneDayChecked()) {
                 dbOperation()
-                // TODO: instead of automatically going back, delegate this to a callback method that triggers after the alarm is registered
                 onBackPressed()
             } else {
                 promptCheckDays()
