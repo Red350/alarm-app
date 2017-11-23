@@ -34,6 +34,7 @@ class MainActivity : BaseActivity() {
         button_main_setalarm.setOnClickListener { startActivity(Intent(this, SetAlarmActivity::class.java)) }
         button_main_cancelsnooze.setOnClickListener {
             cancelSnooze()
+            displayNextAlarm(sharedPrefs.getNextAlarmTime())
             button_main_cancelsnooze.visibility = View.INVISIBLE
         }
     }
@@ -48,5 +49,7 @@ class MainActivity : BaseActivity() {
         text_main_nextalarmtime.text = if (time == -1L) "No alarms set!" else time.fromEpochToTimeString()
         text_main_nextalarmdate.text = if (time == -1L) "" else time.fromEpochToDateString()
     }
+
+
 
 }
