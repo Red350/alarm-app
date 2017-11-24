@@ -17,4 +17,7 @@
     <string name="main_cancelsnooze">Cancel Snooze</string>
     <string name="snooze_time">snoozeTime</string>
     <string name="delete_alarm_desc">Delete alarm</string>
+    <string name="weather_desc">Icon for today\'s weather</string>
+    <string name="stop_alarm">Stop</string>
+    <string name="snooze_alarm">Snooze</string>
 </resources>

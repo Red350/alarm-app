@@ -45,4 +45,5 @@
         android:text="@string/main_cancelsnooze"
         android:textSize="@dimen/button_label"
         android:visibility="invisible"/>
+
 </LinearLayout>

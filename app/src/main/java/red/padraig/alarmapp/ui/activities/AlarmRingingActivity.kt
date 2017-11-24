@@ -5,8 +5,10 @@ import android.view.WindowManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
+import red.padraig.alarmapp.Extensions.fromEpochToTimeString
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
+import red.padraig.alarmapp.weather.DownloadWeatherIcon
 import java.util.concurrent.TimeUnit
 
 
@@ -21,6 +23,10 @@ class AlarmRingingActivity : BaseActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+
+        DownloadWeatherIcon(image_alarmringing_weather).execute()
+
+        text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
 
         alarmAnnunciator = AlarmAnnunciator.ToastAlarm(applicationContext)
         alarmAnnunciator.play()
