@@ -1,5 +1,7 @@
 package red.padraig.alarmapp.ui.activities
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
@@ -24,8 +26,8 @@ class AlarmRingingActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
 
-        DownloadWeatherIcon(image_alarmringing_weather).execute()
-
+        loadWeatherIcon()
+        // TODO: Update the time every minute
         text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
 
         alarmAnnunciator = AlarmAnnunciator.ToastAlarm(applicationContext)
@@ -55,6 +57,16 @@ class AlarmRingingActivity : BaseActivity() {
     override fun clearListeners() {
         button_alarmringing_stop.setOnClickListener(null)
         button_alarmringing_snooze.setOnClickListener(null)
+    }
+
+    // Set the weather icon, if there's no network connection does nothing
+    private fun loadWeatherIcon() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+
+        if (networkInfo != null && networkInfo.isConnected) {
+            DownloadWeatherIcon(image_alarmringing_weather).execute()
+        }
     }
 
     // Stop the current alarm ringing and register the next alarm
