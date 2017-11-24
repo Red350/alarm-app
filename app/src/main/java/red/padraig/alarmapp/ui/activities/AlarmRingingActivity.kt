@@ -3,7 +3,10 @@ package red.padraig.alarmapp.ui.activities
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
@@ -16,6 +19,8 @@ import java.util.concurrent.TimeUnit
 
 class AlarmRingingActivity : BaseActivity() {
 
+    private val snoozeTimes: Array<Int> = arrayOf(1, 5, 10, 15)
+
     lateinit var alarmAnnunciator: AlarmAnnunciator
     var alarmSet = false
 
@@ -25,13 +30,23 @@ class AlarmRingingActivity : BaseActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         loadWeatherIcon()
         // TODO: Update the time every minute
         text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
 
+        initialiseSnoozeSpinner()
+
         alarmAnnunciator = AlarmAnnunciator.ToastAlarm(applicationContext)
         alarmAnnunciator.play()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Set the default snooze time to 10
+        spinner_alarmringing_snoozetime.setSelection(2)
     }
 
     override fun onPause() {
@@ -52,11 +67,27 @@ class AlarmRingingActivity : BaseActivity() {
             snoozeAlarm()
             finish()
         }
+        spinner_alarmringing_snoozetime.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val snoozeTime = parent?.getItemAtPosition(position) as Int
+                sharedPrefs.setSnoozeDuration(snoozeTime)
+            }
+        }
     }
 
     override fun clearListeners() {
         button_alarmringing_stop.setOnClickListener(null)
         button_alarmringing_snooze.setOnClickListener(null)
+        spinner_alarmringing_snoozetime.onItemSelectedListener = null
+    }
+
+    private fun initialiseSnoozeSpinner() {
+        val adapter = ArrayAdapter<Int>(this, android.R.layout.simple_spinner_item, snoozeTimes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_alarmringing_snoozetime.adapter = adapter
     }
 
     // Set the weather icon, if there's no network connection does nothing
@@ -75,9 +106,14 @@ class AlarmRingingActivity : BaseActivity() {
         sharedPrefs.setSnoozeState(false)   // Must set snooze state false before registering a new alarm
         setNextAlarm()
         alarmSet = true
+        Toast.makeText(
+                this,
+                getString(R.string.alarm_stopped_message),
+                Toast.LENGTH_LONG
+        ).show()
     }
 
-    // Stop the current alarm ringing and register a snooze alarm for 10 minutes from this point
+    // Stop the current alarm ringing and register a snooze alarm based on the value in the spinner
     private fun snoozeAlarm() {
         alarmAnnunciator.stop()
         snoozeFor(sharedPrefs.getSnoozeDuration())
@@ -93,7 +129,7 @@ class AlarmRingingActivity : BaseActivity() {
     private fun snoozeFor(minutes: Int) {
         val snoozeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(minutes.toLong())
         alarmBroadcastSetter.set(applicationContext, snoozeTime)
-        updateNotification( "Alarm snoozed until: ", snoozeTime.fromEpochToDateTimeString())
+        updateNotification(getString(R.string.alarm_snoozed_until_message), snoozeTime.fromEpochToDateTimeString())
         sharedPrefs.setSnoozeTime(snoozeTime)
     }
 }

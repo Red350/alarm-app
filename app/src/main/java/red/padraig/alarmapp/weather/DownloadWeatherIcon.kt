@@ -17,20 +17,22 @@ import java.net.URL
 class DownloadWeatherIcon(imageView: ImageView) : AsyncTask<Void, Void, Bitmap>() {
 
     private val TAG = "DownloadWeatherIcon"
-    private val API_KEY = "<REMOVED>"
+    private val API_KEY = ""
     private val WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?id=7778677&APPID=" + API_KEY
     private val ICON_URL_BASE = "http://openweathermap.org/img/w/"
 
     private val imageViewReference: WeakReference<ImageView> = WeakReference(imageView)
 
-    override fun doInBackground(vararg args: Void?): Bitmap {
+    override fun doInBackground(vararg args: Void?): Bitmap? {
         Log.d(TAG, "Starting connection...")
-        return getIconImage(getWeatherIconId())
+        return if (API_KEY != "") getIconImage(getWeatherIconId()) else null
     }
 
-    override fun onPostExecute(result: Bitmap) {
-        val imageView = imageViewReference.get()
-        imageView?.setImageBitmap(result)
+    override fun onPostExecute(result: Bitmap?) {
+        if (result != null) {
+            val imageView = imageViewReference.get()
+            imageView?.setImageBitmap(result)
+        }
     }
 
     private fun getWeatherIconId(): String {
