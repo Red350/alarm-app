@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import red.padraig.alarmapp.Extensions.fromEpochToDateString
 import red.padraig.alarmapp.Extensions.fromEpochToTimeString
 import red.padraig.alarmapp.R
+import red.padraig.alarmapp.weather.DownloadWeatherIcon
 
 class MainActivity : BaseActivity() {
 
