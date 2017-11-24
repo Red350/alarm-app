@@ -96,7 +96,7 @@ class AlarmRingingActivity : BaseActivity() {
         val networkInfo = connectivityManager.activeNetworkInfo
 
         if (networkInfo != null && networkInfo.isConnected) {
-            DownloadWeatherIcon(image_alarmringing_weather).execute()
+            DownloadWeatherIcon(image_alarmringing_weather, text_alarmringing_temperature).execute()
         }
     }
 

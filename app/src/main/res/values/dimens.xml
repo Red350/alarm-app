@@ -3,4 +3,5 @@
     <dimen name="button_label">20sp</dimen>
     <dimen name="daylabel_margin">5dp</dimen>
     <dimen name="alarmrow_margin">15dp</dimen>
+    <dimen name="day_selector_margin">5sp</dimen>
 </resources>
