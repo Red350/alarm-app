@@ -2,7 +2,6 @@ package red.padraig.alarmapp.ui.activities
 
 import android.app.Activity
 import android.os.Bundle
-import android.widget.Toast
 import io.reactivex.disposables.CompositeDisposable
 import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
 import red.padraig.alarmapp.R
@@ -66,11 +65,6 @@ abstract class BaseActivity : Activity() {
         } else {
             alarmBroadcastSetter.set(this, nextAlarmTime)
             updateNotification( "Next alarm will ring at:", nextAlarmTime.fromEpochToDateTimeString())
-            Toast.makeText(
-                    this,
-                    "Next alarm will ring at:\n ${nextAlarmTime.fromEpochToDateTimeString()}",
-                    Toast.LENGTH_LONG
-            ).show()
         }
     }
 

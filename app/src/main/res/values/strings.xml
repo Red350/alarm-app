@@ -20,4 +20,6 @@
     <string name="weather_desc">Icon for today\'s weather</string>
     <string name="stop_alarm">Stop</string>
     <string name="snooze_alarm">Snooze</string>
+    <string name="alarm_stopped_message">Alarm stopped, have a nice day!</string>
+    <string name="alarm_snoozed_until_message">Alarm snoozed until:</string>
 </resources>
