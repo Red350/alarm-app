@@ -19,17 +19,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/button_alarmringing_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/stop_alarm" />
+            android:src="@drawable/ic_stop_alarm"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/button_alarmringing_snooze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/snooze_alarm" />
+            android:src="@drawable/ic_snooze"/>
 
         <Spinner
             android:id="@+id/spinner_alarmringing_snoozetime"
