@@ -99,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_clear_black_24dp"
+        android:src="@drawable/ic_delete"
         android:backgroundTint="@color/transparent"
         android:contentDescription="@string/delete_alarm_desc" />
 </RelativeLayout>

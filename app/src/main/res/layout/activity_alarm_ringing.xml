@@ -56,7 +56,7 @@
             android:id="@+id/image_alarmringing_weather"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:src="@drawable/ic_clear_black_24dp"
+            android:src="@drawable/ic_delete"
             android:contentDescription="@string/weather_desc" />
 
     </LinearLayout>

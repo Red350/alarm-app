@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun displayNextAlarm(time: Long) {
-        text_main_nextalarmtime.text = if (time == -1L) "No alarms set!" else time.fromEpochToTimeString()
+        text_main_nextalarmtime.text = if (time == -1L) getString(R.string.no_alarms_set) else time.fromEpochToTimeString()
         text_main_nextalarmdate.text = if (time == -1L) "" else time.fromEpochToDateString()
     }
 

@@ -15,7 +15,7 @@ import red.padraig.alarmapp.notifications.NotificationController
 abstract class BaseActivity : Activity() {
 
     private val NOTIFICATION_ID = 1
-    private val ALARM_ICON = R.drawable.ic_access_alarm_black_24dp
+    private val ALARM_ICON = R.drawable.ic_alarm
 
     protected val TAG = this::class.simpleName+"TAG"
     protected val disposables = CompositeDisposable()
