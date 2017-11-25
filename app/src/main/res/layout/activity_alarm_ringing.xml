@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context="red.padraig.alarmapp.ui.activities.AlarmRingingActivity">
 
@@ -11,54 +10,66 @@
         android:id="@+id/text_alarmringing_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="100sp"
-        android:text="07:30"/>
+        android:layout_centerHorizontal="true"
+        android:layout_margin="50dp"
+        android:text="07:30"
+        android:textSize="100sp" />
+
+    <ImageButton
+        android:id="@+id/button_alarmringing_stop"
+        android:layout_width="@dimen/alarm_button_size"
+        android:layout_height="@dimen/alarm_button_size"
+        android:layout_alignStart="@id/text_alarmringing_time"
+        android:layout_below="@id/text_alarmringing_time"
+        android:background="@drawable/ic_stop_alarm_clickable" />
+
+    <ImageButton
+        android:id="@+id/button_alarmringing_snooze"
+        android:layout_width="@dimen/alarm_button_size"
+        android:layout_height="@dimen/alarm_button_size"
+        android:layout_alignEnd="@id/text_alarmringing_time"
+        android:layout_below="@id/text_alarmringing_time"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/ic_snooze_alarm_clickable" />
+
+    <Spinner
+        android:id="@+id/spinner_alarmringing_snoozetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/button_alarmringing_snooze"
+        android:layout_below="@id/button_alarmringing_snooze"
+        android:layout_gravity="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/spinner_alarmringing_snoozetime"
+        android:layout_below="@id/button_alarmringing_snooze"
+        android:text="min(s)"/>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:gravity="center"
         android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/button_alarmringing_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_stop_alarm"/>
-
-        <ImageButton
-            android:id="@+id/button_alarmringing_snooze"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_snooze"/>
-
-        <Spinner
-            android:id="@+id/spinner_alarmringing_snoozetime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20sp"
-        android:gravity="center">
 
         <TextView
             android:id="@+id/text_alarmringing_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:text="30°C"/>
+            android:text=""
+            android:textSize="30sp" />
+
         <ImageView
             android:id="@+id/image_alarmringing_weather"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:src="@drawable/ic_delete"
-            android:contentDescription="@string/weather_desc" />
+            android:contentDescription="@string/weather_desc"/>
 
     </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>
