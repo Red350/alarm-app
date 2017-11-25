@@ -8,6 +8,7 @@
     tools:context="red.padraig.alarmapp.ui.activities.MainActivity">
 
     <TextView
+        android:id="@+id/text_main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_nextalarmtitle"

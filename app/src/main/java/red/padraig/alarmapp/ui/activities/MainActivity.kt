@@ -45,9 +45,17 @@ class MainActivity : BaseActivity() {
         button_main_cancelsnooze.setOnClickListener(null)
     }
 
+    // Displays the next alarm time, or a message if no alarms are set
     private fun displayNextAlarm(time: Long) {
-        text_main_nextalarmtime.text = if (time == -1L) getString(R.string.no_alarms_set) else time.fromEpochToTimeString()
-        text_main_nextalarmdate.text = if (time == -1L) "" else time.fromEpochToDateString()
+        if (time == -1L) {
+            text_main_title.text = getString(R.string.no_alarms_set)
+            text_main_nextalarmtime.text = ""
+            text_main_nextalarmdate.text = ""
+        } else {
+            text_main_title.text = getString(R.string.main_nextalarmtitle)
+            text_main_nextalarmtime.text = time.fromEpochToTimeString()
+            text_main_nextalarmdate.text = time.fromEpochToDateString()
+        }
     }
 
 
