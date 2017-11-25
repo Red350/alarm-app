@@ -51,4 +51,10 @@
         android:textSize="@dimen/button_label"
         android:visibility="invisible"/>
 
+    <Button
+        android:id="@+id/button_main_testalarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test alarm"/>
+
 </LinearLayout>

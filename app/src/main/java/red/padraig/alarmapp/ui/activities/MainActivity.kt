@@ -37,12 +37,14 @@ class MainActivity : BaseActivity() {
             displayNextAlarm(sharedPrefs.getNextAlarmTime())
             button_main_cancelsnooze.visibility = View.INVISIBLE
         }
+        button_main_testalarm.setOnClickListener { startActivity(Intent(this, AlarmRingingActivity::class.java)) }
     }
 
     override fun clearListeners() {
         button_main_viewalarms.setOnClickListener(null)
         button_main_setalarm.setOnClickListener(null)
         button_main_cancelsnooze.setOnClickListener(null)
+        button_main_testalarm.setOnClickListener(null)
     }
 
     // Displays the next alarm time, or a message if no alarms are set
