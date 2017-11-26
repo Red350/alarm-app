@@ -58,14 +58,14 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
     private fun onAlarmUpdated(alarm: Alarm) = alarmAdapter.updateRow(alarm)
 
     // Animates the deleted row before updating the list view
-    // https://stackoverflow.com/a/6857762 (used animationListener instead of handler as suggested in the comments)
     private fun onAlarmDeleted(alarmId: Long) {
         var childIndex = -1
 
+        // Reference: https://stackoverflow.com/a/6857762 (used animationListener instead of handler as suggested in the comments)
         val animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
         animation.duration = 250
 
-        animation.setAnimationListener( object: Animation.AnimationListener {
+        animation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationRepeat(anim: Animation?) {
             }
 
@@ -77,6 +77,7 @@ class AlarmListActivity : BaseActivity(), UpdateAlarmStateCallback, DeleteAlarmC
             override fun onAnimationStart(anim: Animation?) {
             }
         })
+        // Reference Complete
 
         // Find the row index of the view that's being deleted
         for ((id) in alarmAdapter.alarms) {

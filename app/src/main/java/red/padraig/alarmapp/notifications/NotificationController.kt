@@ -3,16 +3,13 @@ package red.padraig.alarmapp.notifications
 import android.app.NotificationManager
 import android.content.Context
 
-/**
- * Created by Red on 23/11/2017.
- */
 interface NotificationController {
 
     fun update(id: Int, icon: Int, title: String, message: String)
 
     fun cancel(id: Int)
 
-    class Impl(context: Context): NotificationController {
+    class Impl(context: Context) : NotificationController {
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val alarmNotificationFactory = AlarmNotificationFactory(context)

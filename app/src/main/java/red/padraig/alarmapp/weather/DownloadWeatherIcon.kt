@@ -17,6 +17,7 @@ import java.net.URL
 
 class DownloadWeatherIcon(imageView: ImageView, textView: TextView) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
 
+    // TODO: Use location instead of hardcoding to dublin
     private val TAG = "DownloadWeatherIcon"
     private val API_KEY = "2cf63b66a70d3a247eca2abb20d91634"
     private val WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?id=7778677&units=metric&APPID=" + API_KEY

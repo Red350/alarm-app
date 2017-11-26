@@ -6,9 +6,6 @@ import android.content.Context
 import android.content.Intent
 import red.padraig.alarmapp.ui.activities.MainActivity
 
-/**
- * Created by Red on 23/11/2017.
- */
 class AlarmNotificationFactory(val context: Context) {
 
     fun create(icon: Int, title: String, message: String): Notification {

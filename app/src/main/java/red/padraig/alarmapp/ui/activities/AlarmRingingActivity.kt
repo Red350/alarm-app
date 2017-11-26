@@ -33,29 +33,27 @@ class AlarmRingingActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         loadWeatherIcon()
-        // TODO: Update the time every minute
-        text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
-
         initialiseSnoozeSpinner()
 
+        // TODO: Replace this with AlarmAnnunciator.Impl
         alarmAnnunciator = AlarmAnnunciator.ToastAlarm(applicationContext)
         alarmAnnunciator.play()
+
+        // Register the next alarm and end the snooze state.
+        // This prevents a situation where no alarm is set due to the user quitting this activity
+        // without either snoozing or cancelling the alarm.
+        sharedPrefs.setSnoozeState(false)
+        setNextAlarm()
     }
 
     override fun onResume() {
         super.onResume()
 
+        // TODO: Update the time every minute
+        text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
+
         // Set the default snooze time to 10
         spinner_alarmringing_snoozetime.setSelection(2)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        alarmAnnunciator.stop() // Alarm stops ringing if the user puts the app in the background
-
-        // If the user backgrounds the activity without snoozing or cancelling, a snooze is set by default
-        if (!alarmSet) snoozeAlarm()
-        finish()
     }
 
     override fun initialiseListeners() {
@@ -90,7 +88,7 @@ class AlarmRingingActivity : BaseActivity() {
         spinner_alarmringing_snoozetime.adapter = adapter
     }
 
-    // Set the weather icon, if there's no network connection does nothing
+    // Set the weather icon, if there's no network connection this does nothing
     private fun loadWeatherIcon() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo

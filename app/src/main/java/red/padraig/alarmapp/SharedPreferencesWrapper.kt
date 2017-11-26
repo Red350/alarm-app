@@ -3,9 +3,6 @@ package red.padraig.alarmapp
 import android.content.Context
 import android.content.SharedPreferences
 
-/**
- * Created by Red on 20/11/2017.
- */
 class SharedPreferencesWrapper(val context: Context) {
 
     private val SHARED_PREFS_TAG = "alarmSharedPrefs"

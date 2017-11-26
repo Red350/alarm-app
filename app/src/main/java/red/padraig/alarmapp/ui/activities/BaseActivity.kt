@@ -17,7 +17,7 @@ abstract class BaseActivity : Activity() {
     private val NOTIFICATION_ID = 1
     private val ALARM_ICON = R.drawable.ic_alarm
 
-    protected val TAG = this::class.simpleName+"TAG"
+    protected val TAG = this::class.simpleName + "TAG"
     protected val disposables = CompositeDisposable()
 
     protected lateinit var alarmDAO: AlarmDAO
@@ -51,7 +51,7 @@ abstract class BaseActivity : Activity() {
         // Maybe solve this by keeping track of the next alarm time and id in shared prefs
         // If the deleted alarm matches the id, then set a new alarm
         // If the updated alarm has a trigger time that's sooner than shared prefs then register that alarm
-        alarmDAO.updatedAlarms.subscribe { _ -> setNextAlarm()}
+        alarmDAO.updatedAlarms.subscribe { _ -> setNextAlarm() }
         alarmDAO.deletedAlarmIds.subscribe { _ -> setNextAlarm() }
     }
 
@@ -64,7 +64,7 @@ abstract class BaseActivity : Activity() {
             cancelAlarm()
         } else {
             alarmBroadcastSetter.set(this, nextAlarmTime)
-            updateNotification( "Next alarm will ring at:", nextAlarmTime.fromEpochToDateTimeString())
+            updateNotification("Next alarm will ring at:", nextAlarmTime.fromEpochToDateTimeString())
         }
     }
 

@@ -59,7 +59,4 @@ class MainActivity : BaseActivity() {
             text_main_nextalarmdate.text = time.fromEpochToDateString()
         }
     }
-
-
-
 }

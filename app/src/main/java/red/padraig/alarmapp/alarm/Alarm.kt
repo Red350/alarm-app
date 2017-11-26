@@ -32,7 +32,7 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
                 .let { return alarmTimestampWithOffset(it) }
     }
 
-    // https://stackoverflow.com/a/34431277
+    // Reference: https://stackoverflow.com/a/34431277
     private fun timeSinceMidnight(): Long {
         val now = Calendar.getInstance()
 
@@ -49,6 +49,7 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
 
         return midnight.timeInMillis
     }
+    // Reference Complete
 
     private fun alarmTimestampWithOffset(daysOffset: Int): Long {
         return previousMidnightTimestamp() + TimeUnit.DAYS.toMillis(daysOffset.toLong()) + time
