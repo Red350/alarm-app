@@ -6,14 +6,13 @@
     android:orientation="vertical"
     tools:context="red.padraig.alarmapp.ui.activities.AlarmRingingActivity">
 
-    <TextView
+    <TextClock
         android:id="@+id/text_alarmringing_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="50dp"
-        android:text="07:30"
-        android:textSize="100sp" />
+        android:textSize="100sp"/>
 
     <ImageButton
         android:id="@+id/button_alarmringing_stop"
@@ -56,18 +55,32 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <ProgressBar
+            android:id="@+id/progress_alarmringing_weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_alarmringing_noweather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unable_to_download_weather"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/text_alarmringing_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/image_alarmringing_weather"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:contentDescription="@string/weather_desc"/>
+            android:contentDescription="@string/weather_desc"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -23,4 +23,5 @@
     <string name="alarm_stopped_message">Alarm stopped, have a nice day!</string>
     <string name="alarm_snoozed_until_message">Alarm snoozed until:</string>
     <string name="no_alarms_set">No alarms set</string>
+    <string name="unable_to_download_weather">Unable to download weather data</string>
 </resources>

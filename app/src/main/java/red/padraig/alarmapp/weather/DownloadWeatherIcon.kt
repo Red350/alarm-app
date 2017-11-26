@@ -4,27 +4,21 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
 
 
-class DownloadWeatherIcon(imageView: ImageView, textView: TextView) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
+class DownloadWeatherIcon(val callback: Callback) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
 
     // TODO: Use location instead of hardcoding to dublin
     private val TAG = "DownloadWeatherIcon"
     private val API_KEY = "2cf63b66a70d3a247eca2abb20d91634"
     private val WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?id=7778677&units=metric&APPID=" + API_KEY
     private val ICON_URL_BASE = "http://openweathermap.org/img/w/"
-
-    private val imageViewReference: WeakReference<ImageView> = WeakReference(imageView)
-    private val textViewReference: WeakReference<TextView> = WeakReference(textView)
 
     override fun doInBackground(vararg args: Void?): Pair<String, Bitmap?> {
         Log.d(TAG, "Starting connection...")
@@ -42,11 +36,7 @@ class DownloadWeatherIcon(imageView: ImageView, textView: TextView) : AsyncTask<
     }
 
     override fun onPostExecute(result: Pair<String, Bitmap?>) {
-        val textView = textViewReference.get()
-        textView?.text = result.first
-
-        val imageView = imageViewReference.get()
-        imageView?.setImageBitmap(result.second)
+        callback.onWeatherDownloaded(result)
     }
 
     private fun getWeatherJson(): JSONObject {
@@ -88,5 +78,9 @@ class DownloadWeatherIcon(imageView: ImageView, textView: TextView) : AsyncTask<
         }
         inputStream.close()
         return stringBuilder.toString()
+    }
+
+    interface Callback {
+        fun onWeatherDownloaded(weatherData: Pair<String, Bitmap?>)
     }
 }

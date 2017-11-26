@@ -1,6 +1,7 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
@@ -17,7 +18,7 @@ import red.padraig.alarmapp.weather.DownloadWeatherIcon
 import java.util.concurrent.TimeUnit
 
 
-class AlarmRingingActivity : BaseActivity() {
+class AlarmRingingActivity : BaseActivity(), DownloadWeatherIcon.Callback {
 
     private val snoozeTimes: Array<Int> = arrayOf(1, 5, 10, 15)
 
@@ -82,19 +83,38 @@ class AlarmRingingActivity : BaseActivity() {
         spinner_alarmringing_snoozetime.onItemSelectedListener = null
     }
 
+    // Callback from weather download completing
+    override fun onWeatherDownloaded(weatherData: Pair<String, Bitmap?>) {
+        progress_alarmringing_weather.visibility = View.GONE
+        if (weatherData.second == null) {
+            // Display weather not found
+            text_alarmringing_noweather.visibility = View.VISIBLE
+        } else {
+            // Display weather
+            text_alarmringing_temperature.visibility = View.VISIBLE
+            text_alarmringing_temperature.text = weatherData.first
+
+            image_alarmringing_weather.visibility = View.VISIBLE
+            image_alarmringing_weather.setImageBitmap(weatherData.second)
+        }
+    }
+
     private fun initialiseSnoozeSpinner() {
         val adapter = ArrayAdapter<Int>(this, android.R.layout.simple_spinner_item, snoozeTimes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner_alarmringing_snoozetime.adapter = adapter
     }
 
-    // Set the weather icon, if there's no network connection this does nothing
+    // Set the weather icon. Displays "weather not found" if no network connection.
     private fun loadWeatherIcon() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
 
         if (networkInfo != null && networkInfo.isConnected) {
-            DownloadWeatherIcon(image_alarmringing_weather, text_alarmringing_temperature).execute()
+            DownloadWeatherIcon(this).execute()
+        } else {
+            progress_alarmringing_weather.visibility = View.GONE
+            text_alarmringing_noweather.visibility = View.VISIBLE
         }
     }
 
