@@ -19,8 +19,8 @@ data class Alarm(var id: Long, val time: Long, val days: BooleanArray, val activ
         val timeSinceMidnight = timeSinceMidnight()
 
         // If alarm is set for today, still have to ensure the time hasn't already passed
-        // The time is offset by 1 second to prevent any possibility of the triggered alarm being re-registered
-        if (days[todaysIndex] and (time - TimeUnit.SECONDS.toMillis(1) > timeSinceMidnight)) {
+        // The time is offset by 30 seconds to prevent any possibility of the triggered alarm being re-registered
+        if (days[todaysIndex] and (time - TimeUnit.SECONDS.toMillis(30) > timeSinceMidnight)) {
             return alarmTimestampWithOffset(0)
         }
 

@@ -9,7 +9,6 @@ import red.padraig.alarmapp.ui.activities.MainActivity
 class AlarmNotificationFactory(val context: Context) {
 
     fun create(icon: Int, title: String, message: String): Notification {
-        // TODO: Replace this with the new notification builder
         return Notification.Builder(context)
                 .setSmallIcon(icon)
                 .setContentTitle(title)

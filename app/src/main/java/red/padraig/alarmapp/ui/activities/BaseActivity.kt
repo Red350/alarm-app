@@ -46,11 +46,6 @@ abstract class BaseActivity : Activity() {
     }
 
     open protected fun initialiseSubscriptions() {
-        // TODO: at the moment, every time an alarm is changed or deleted, a new alarm is registered with the OS
-        // The deleted/changed alarm may not actually change the next alarm.
-        // Maybe solve this by keeping track of the next alarm time and id in shared prefs
-        // If the deleted alarm matches the id, then set a new alarm
-        // If the updated alarm has a trigger time that's sooner than shared prefs then register that alarm
         alarmDAO.updatedAlarms.subscribe { _ -> setNextAlarm() }
         alarmDAO.deletedAlarmIds.subscribe { _ -> setNextAlarm() }
     }

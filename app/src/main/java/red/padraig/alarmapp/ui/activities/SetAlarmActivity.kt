@@ -15,7 +15,6 @@ import java.util.*
 
 class SetAlarmActivity : BaseActivity() {
 
-    // TODO: Add a button to change between picking individual days, or setting alarm for every day
     // Allows one button to both create and update an alarm, depending on the context
     private lateinit var dbOperation: () -> Unit
     private var alarm: Alarm? = null

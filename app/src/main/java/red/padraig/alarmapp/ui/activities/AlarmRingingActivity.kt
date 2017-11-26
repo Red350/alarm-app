@@ -35,9 +35,7 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
         loadWeatherIcon()
         initialiseSnoozeSpinner()
 
-        // TODO: Replace this with AlarmAnnunciator.Impl
-        alarmAnnunciator = AlarmAnnunciator.ToastAlarm(applicationContext)
-        alarmAnnunciator.play()
+        alarmAnnunciator = AlarmAnnunciator.Impl(applicationContext)
 
         // Register the next alarm and end the snooze state.
         // This prevents a situation where no alarm is set due to the user quitting this activity
@@ -49,8 +47,16 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
     override fun onResume() {
         super.onResume()
 
+        alarmAnnunciator.play()
+
         // Set the default snooze time to 10
         spinner_alarmringing_snoozetime.setSelection(2)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        alarmAnnunciator.stop()
     }
 
     override fun initialiseListeners() {
