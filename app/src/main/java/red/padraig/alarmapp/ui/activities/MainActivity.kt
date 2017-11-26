@@ -1,14 +1,20 @@
 package red.padraig.alarmapp.ui.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import red.padraig.alarmapp.Extensions.fromEpochToDateString
 import red.padraig.alarmapp.Extensions.fromEpochToTimeString
 import red.padraig.alarmapp.R
+import red.padraig.alarmapp.weather.LocationUpdater
 
 class MainActivity : BaseActivity() {
+
+    private lateinit var locationUpdater: LocationUpdater
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +25,8 @@ class MainActivity : BaseActivity() {
                 arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION),
                 0
         )
+
+        initialiseLocationUpdater()
     }
 
     override fun onResume() {
@@ -32,6 +40,7 @@ class MainActivity : BaseActivity() {
         super.onDestroy()
         alarmDAO.close()
     }
+
 
     override fun initialiseListeners() {
         button_main_viewalarms.setOnClickListener { startActivity(Intent(this, AlarmListActivity::class.java)) }
@@ -49,6 +58,20 @@ class MainActivity : BaseActivity() {
         button_main_setalarm.setOnClickListener(null)
         button_main_cancelsnooze.setOnClickListener(null)
         button_main_testalarm.setOnClickListener(null)
+    }
+
+    private fun initialiseLocationUpdater() {
+        if (checkSelfPermission( android.Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission( android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) {
+            locationUpdater = LocationUpdater(sharedPrefs)
+            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    1000,   // update every second
+                    100.0f, // 100m change
+                    locationUpdater
+            )
+        }
     }
 
     // Displays the next alarm time, or a message if no alarms are set

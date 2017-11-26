@@ -2,6 +2,7 @@ package red.padraig.alarmapp
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.location.Location
 
 class SharedPreferencesWrapper(val context: Context) {
 
@@ -10,6 +11,8 @@ class SharedPreferencesWrapper(val context: Context) {
     val SNOOZE_TIME = "snoozeTime"
     val NEXT_ALARM_TIME = "nextAlarmTime"
     val SNOOZE_DURATION = "snoozeDuration"
+    val LATITUDE = "lat"
+    val LONGITUDE = "lon"
 
     companion object {
         val INVALID_TIME = -1L
@@ -46,6 +49,21 @@ class SharedPreferencesWrapper(val context: Context) {
 
     fun getSnoozeDuration(): Int {
         return getSharedPreferences().getInt(SNOOZE_DURATION, DEFAULT_SNOOZE_DURATION)
+    }
+
+    fun setCoordinates(location: Location) {
+        val editor = getSharedPreferences().edit()
+        editor.putFloat(LATITUDE, location.latitude.toFloat())
+        editor.putFloat(LONGITUDE, location.longitude.toFloat())
+        editor.apply()
+    }
+
+    fun getCoordinates(): Pair<Float, Float> {
+        val sharedPreferences = getSharedPreferences()
+        return Pair(
+                sharedPreferences.getFloat(LATITUDE, 0f),
+                sharedPreferences.getFloat(LONGITUDE, 0f)
+        )
     }
 
     private fun getSharedPreferences(): SharedPreferences {

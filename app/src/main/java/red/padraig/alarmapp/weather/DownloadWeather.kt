@@ -2,7 +2,6 @@ package red.padraig.alarmapp.weather
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.location.Location
 import android.os.AsyncTask
 import android.util.Log
 import org.json.JSONObject
@@ -13,19 +12,18 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class DownloadWeather(val callback: Callback, val location: Location) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
+class DownloadWeather(val callback: Callback, val coords: Pair<Float, Float>) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
 
-    // TODO: Use location instead of hardcoding to dublin
     private val TAG = "DownloadWeather"
     private val API_KEY = "2cf63b66a70d3a247eca2abb20d91634"
     private val WEATHER_URL_BASE = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=" + API_KEY
     private val ICON_URL_BASE = "http://openweathermap.org/img/w/"
 
-
     override fun doInBackground(vararg args: Void?): Pair<String, Bitmap?> {
         Log.d(TAG, "Starting connection...")
         try {
-            if (API_KEY != "") {
+            // Check if last known location has been stored
+            if ((API_KEY != "") or ((coords.first == 0F) and (coords.second == 0F))) {
                 val weatherJson = getWeatherJson()
                 return Pair(getFormattedTemperature(weatherJson), getWeatherIcon(weatherJson))
             } else {
@@ -51,9 +49,9 @@ class DownloadWeather(val callback: Callback, val location: Location) : AsyncTas
     private fun buildWeatherUrl(): String {
         val sb = StringBuilder(WEATHER_URL_BASE)
         sb.append("&lat=")
-        sb.append(location.latitude)
+        sb.append(coords.first)
         sb.append("&lon=")
-        sb.append(location.longitude)
+        sb.append(coords.second)
         return sb.toString()
     }
 

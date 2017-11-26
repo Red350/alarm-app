@@ -1,10 +1,7 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.location.Criteria
-import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
@@ -14,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_alarm_ringing.*
 import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
-import red.padraig.alarmapp.Extensions.fromEpochToTimeString
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
 import red.padraig.alarmapp.weather.DownloadWeather
@@ -53,9 +49,6 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
     override fun onResume() {
         super.onResume()
 
-        // TODO: Update the time every minute
-        text_alarmringing_time.text = System.currentTimeMillis().fromEpochToTimeString()
-
         // Set the default snooze time to 10
         spinner_alarmringing_snoozetime.setSelection(2)
     }
@@ -88,11 +81,12 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
 
     // Callback from weather download completing
     override fun onWeatherDownloaded(weatherData: Pair<String, Bitmap?>) {
-        progress_alarmringing_weather.visibility = View.GONE
         if (weatherData.second == null) {
-            // Display weather not found
-            text_alarmringing_noweather.visibility = View.VISIBLE
+            displayNoWeatherData()
         } else {
+            // Hide loading spinner
+            progress_alarmringing_weather.visibility = View.GONE
+
             // Display weather
             text_alarmringing_temperature.visibility = View.VISIBLE
             text_alarmringing_temperature.text = weatherData.first
@@ -113,21 +107,17 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
 
-        // Need network access and location to display accurate weather data
-        if (networkInfo != null
-                && networkInfo.isConnected
-                && checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val locationManger = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val criteria = Criteria()
-            criteria.accuracy = Criteria.ACCURACY_FINE
-            val bestProvider = locationManger.getBestProvider(criteria, false)
-            val location = locationManger.getLastKnownLocation(bestProvider)
-            DownloadWeather(this, location).execute()
+        // Need network access to get weather data
+        if (networkInfo != null && networkInfo.isConnected) {
+            DownloadWeather(this, sharedPrefs.getCoordinates()).execute()
         } else {
-            progress_alarmringing_weather.visibility = View.GONE
-            text_alarmringing_noweather.visibility = View.VISIBLE
+            displayNoWeatherData()
         }
+    }
+
+    private fun displayNoWeatherData() {
+        progress_alarmringing_weather.visibility = View.GONE
+        text_alarmringing_noweather.visibility = View.VISIBLE
     }
 
     // Stop the current alarm ringing and register the next alarm
