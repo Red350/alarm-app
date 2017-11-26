@@ -41,7 +41,6 @@ class MainActivity : BaseActivity() {
         alarmDAO.close()
     }
 
-
     override fun initialiseListeners() {
         button_main_viewalarms.setOnClickListener { startActivity(Intent(this, AlarmListActivity::class.java)) }
         button_main_setalarm.setOnClickListener { startActivity(Intent(this, SetAlarmActivity::class.java)) }
@@ -67,8 +66,9 @@ class MainActivity : BaseActivity() {
             val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    1000,   // update every second
-                    100.0f, // 100m change
+                    1000,   // update every second (this is to ensure we get a response asap after subscribing)
+                            // The 500m distance should prevent it from calling back too often and burning battery
+                    500.0f, // 500 change
                     locationUpdater
             )
         }

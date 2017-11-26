@@ -64,6 +64,7 @@
         android:text="@string/main_cancelsnooze"
         android:visibility="invisible" />
 
+    <!--This is here purely for demonstration reason, to prevent having to wait for an alarm to trigger-->
     <Button
         android:id="@+id/button_main_testalarm"
         android:layout_width="wrap_content"
@@ -71,6 +72,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:drawableStart="@drawable/ic_settings_white"
-        android:text="Debug: Trigger Alarm"/>
+        android:text="Demo: Trigger Alarm"/>
 
 </RelativeLayout>

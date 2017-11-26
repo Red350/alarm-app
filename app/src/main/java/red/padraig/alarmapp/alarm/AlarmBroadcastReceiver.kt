@@ -9,7 +9,7 @@ import red.padraig.alarmapp.ui.activities.AlarmRingingActivity
 import java.text.DateFormat
 import java.util.*
 
-class AlarmBroadcastReceiver: BroadcastReceiver() {
+class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         // Acquire a wake lock to allow the alarm to wake the phone

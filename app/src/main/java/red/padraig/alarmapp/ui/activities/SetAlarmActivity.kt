@@ -1,7 +1,6 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_set_alarm.*
 import red.padraig.alarmapp.Extensions.fromHoursToMills
@@ -24,8 +23,9 @@ class SetAlarmActivity : BaseActivity() {
         setContentView(R.layout.activity_set_alarm)
 
         initialiseNumberPickers()
-        val alarm: Alarm? = intent.getParcelableExtra<Alarm>("alarm")
 
+        // If the activity was started with a bundled alarm, load that into the view
+        val alarm: Alarm? = intent.getParcelableExtra<Alarm>("alarm")
         if (alarm != null) {
             this.alarm = alarm
             initialiseScreenToUpdatingAlarm(alarm) // Load the bundled alarm into the view
@@ -34,21 +34,6 @@ class SetAlarmActivity : BaseActivity() {
             initialiseScreenToCurrentDayAndTime()
             dbOperation = this::setAlarm
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("blahtest", "pause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("blahtest", "stop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("blahtest", "destroy")
     }
 
     override fun initialiseListeners() {
@@ -82,7 +67,7 @@ class SetAlarmActivity : BaseActivity() {
     }
 
     private fun initialiseScreenToCurrentDayAndTime() {
-        // Tick today
+        // Default to having today ticked
         when (getTodaysIndex()) {
             0 -> check_setalarm_monday.isChecked = true
             1 -> check_setalarm_tuesday.isChecked = true
@@ -115,24 +100,24 @@ class SetAlarmActivity : BaseActivity() {
     }
 
     private fun setAlarm() {
-        alarmDAO.createAlarm(getTime(), getDays(), true)
+        alarmDAO.createAlarm(getTime(), getCheckedDays(), true)
     }
 
     private fun updateAlarm() {
         if (alarm != null) {
-            alarm?.let { alarmDAO.updateAlarm(it.id, getTime(), getDays(), it.active) }
+            alarm?.let { alarmDAO.updateAlarm(it.id, getTime(), getCheckedDays(), it.active) }
         } else {
             throw RuntimeException("Unable to update alarm, no alarm instance stored")
         }
     }
 
     private fun atLeastOneDayChecked(): Boolean {
-        return getDays().any { it }
+        return getCheckedDays().any { it }
     }
 
     private fun promptCheckDays() = Toast.makeText(this, "Select at least one day", Toast.LENGTH_SHORT).show()
 
-    private fun getDays(): BooleanArray {
+    private fun getCheckedDays(): BooleanArray {
         val days = BooleanArray(7)
         days[0] = check_setalarm_monday.isChecked
         days[1] = check_setalarm_tuesday.isChecked

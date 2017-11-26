@@ -36,6 +36,7 @@ class DownloadWeather(val callback: Callback, val coords: Pair<Float, Float>) : 
     }
 
     override fun onPostExecute(result: Pair<String, Bitmap?>) {
+        // Send weather data back to the caller
         callback.onWeatherDownloaded(result)
     }
 

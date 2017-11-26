@@ -28,6 +28,8 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_ringing)
 
+        // These flags are required for the alarm to trigger while phone is locked, or the screen is off
+        // Also keeps the phone screen on to prevent the alarm ending prematurely
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
