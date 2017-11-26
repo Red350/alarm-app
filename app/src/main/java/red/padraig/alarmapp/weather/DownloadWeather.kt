@@ -2,6 +2,7 @@ package red.padraig.alarmapp.weather
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.os.AsyncTask
 import android.util.Log
 import org.json.JSONObject
@@ -12,13 +13,14 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class DownloadWeatherIcon(val callback: Callback) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
+class DownloadWeather(val callback: Callback, val location: Location) : AsyncTask<Void, Void, Pair<String, Bitmap?>>() {
 
     // TODO: Use location instead of hardcoding to dublin
-    private val TAG = "DownloadWeatherIcon"
+    private val TAG = "DownloadWeather"
     private val API_KEY = "2cf63b66a70d3a247eca2abb20d91634"
-    private val WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?id=7778677&units=metric&APPID=" + API_KEY
+    private val WEATHER_URL_BASE = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=" + API_KEY
     private val ICON_URL_BASE = "http://openweathermap.org/img/w/"
+
 
     override fun doInBackground(vararg args: Void?): Pair<String, Bitmap?> {
         Log.d(TAG, "Starting connection...")
@@ -40,8 +42,19 @@ class DownloadWeatherIcon(val callback: Callback) : AsyncTask<Void, Void, Pair<S
     }
 
     private fun getWeatherJson(): JSONObject {
-        val inputStream = getInputStreamFromUrl(WEATHER_URL)
+        val url = buildWeatherUrl()
+        Log.d(TAG, "Getting weather data from: " + url)
+        val inputStream = getInputStreamFromUrl(url)
         return JSONObject(inputStreamToString(inputStream))
+    }
+
+    private fun buildWeatherUrl(): String {
+        val sb = StringBuilder(WEATHER_URL_BASE)
+        sb.append("&lat=")
+        sb.append(location.latitude)
+        sb.append("&lon=")
+        sb.append(location.longitude)
+        return sb.toString()
     }
 
     private fun getFormattedTemperature(json: JSONObject): String {

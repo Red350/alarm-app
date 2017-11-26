@@ -14,7 +14,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPrefs.setSnoozeDuration(1)
+        // Request location permissions, used for local weather data.
+        requestPermissions(
+                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION),
+                0
+        )
     }
 
     override fun onResume() {

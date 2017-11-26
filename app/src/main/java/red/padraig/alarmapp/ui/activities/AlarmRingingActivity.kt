@@ -1,7 +1,10 @@
 package red.padraig.alarmapp.ui.activities
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Criteria
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
@@ -14,11 +17,11 @@ import red.padraig.alarmapp.Extensions.fromEpochToDateTimeString
 import red.padraig.alarmapp.Extensions.fromEpochToTimeString
 import red.padraig.alarmapp.R
 import red.padraig.alarmapp.alarm.AlarmAnnunciator
-import red.padraig.alarmapp.weather.DownloadWeatherIcon
+import red.padraig.alarmapp.weather.DownloadWeather
 import java.util.concurrent.TimeUnit
 
 
-class AlarmRingingActivity : BaseActivity(), DownloadWeatherIcon.Callback {
+class AlarmRingingActivity : BaseActivity(), DownloadWeather.Callback {
 
     private val snoozeTimes: Array<Int> = arrayOf(1, 5, 10, 15)
 
@@ -110,8 +113,17 @@ class AlarmRingingActivity : BaseActivity(), DownloadWeatherIcon.Callback {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
 
-        if (networkInfo != null && networkInfo.isConnected) {
-            DownloadWeatherIcon(this).execute()
+        // Need network access and location to display accurate weather data
+        if (networkInfo != null
+                && networkInfo.isConnected
+                && checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val locationManger = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val criteria = Criteria()
+            criteria.accuracy = Criteria.ACCURACY_FINE
+            val bestProvider = locationManger.getBestProvider(criteria, false)
+            val location = locationManger.getLastKnownLocation(bestProvider)
+            DownloadWeather(this, location).execute()
         } else {
             progress_alarmringing_weather.visibility = View.GONE
             text_alarmringing_noweather.visibility = View.VISIBLE
