@@ -2,8 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:buttonStyle">@style/CustomButton</item>
+    </style>
 
-        <!-- Customize your theme here. -->
+    <style name="CustomButton" parent="android:Widget.Button">
+        <item name="android:backgroundTint">@color/button_colour</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:drawablePadding">@dimen/button_image_padding</item>
+        <item name="android:textSize">@dimen/button_label</item>
     </style>
 
 </resources>

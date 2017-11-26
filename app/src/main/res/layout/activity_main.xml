@@ -11,28 +11,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/main_nextalarmtitle"
         android:layout_marginTop="20dp"
-        android:textSize="20sp"/>
+        android:text="@string/main_nextalarmtitle"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/text_main_nextalarmtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/text_main_title"
-        android:textSize="40sp"
-        android:text="07:20"/>
+        android:layout_centerHorizontal="true"
+        android:text="07:20"
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/text_main_nextalarmdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/text_main_nextalarmtime"
-        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:text="Monday, 6th November 2017"/>
+        android:text="Monday, 6th November 2017"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/button_main_viewalarms"
@@ -40,21 +40,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_main_nextalarmdate"
         android:layout_centerHorizontal="true"
-        android:drawableStart="@drawable/ic_list"
-        android:drawablePadding="@dimen/button_image_padding"
-        android:text="@string/main_viewalarms"
-        android:textSize="@dimen/button_label"/>
+        android:drawableStart="@drawable/ic_list_white"
+        android:text="@string/main_viewalarms" />
 
     <Button
         android:id="@+id/button_main_setalarm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_main_viewalarms"
-        android:drawableStart="@drawable/ic_add_alarm"
-        android:drawablePadding="@dimen/button_image_padding"
         android:layout_centerInParent="true"
-        android:text="@string/main_setalarm"
-        android:textSize="@dimen/button_label"/>
+        android:drawableStart="@drawable/ic_add_alarm_white"
+        android:text="@string/main_setalarm" />
 
     <Button
         android:id="@+id/button_main_cancelsnooze"
@@ -62,11 +58,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_main_setalarm"
         android:layout_centerInParent="true"
-        android:drawableStart="@drawable/ic_cancel_snooze"
-        android:drawablePadding="@dimen/button_image_padding"
+        android:drawableStart="@drawable/ic_cancel_snooze_white"
         android:text="@string/main_cancelsnooze"
-        android:textSize="@dimen/button_label"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/button_main_testalarm"
@@ -74,8 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:drawableStart="@drawable/ic_settings"
-        android:drawablePadding="@dimen/button_image_padding"
+        android:drawableStart="@drawable/ic_settings_white"
         android:text="Debug: Trigger Alarm"/>
 
 </RelativeLayout>
